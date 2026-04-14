@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vern / Mambus AB – Investeringsanalyse</title>
+<title>Vern / Mambus AB — Analyse &amp; investering</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -74,121 +74,183 @@ th.tip > span.tip-icon{vertical-align:middle}
 #global-tip{display:none;position:fixed;background:var(--blue);color:#fff;font-size:11px;line-height:1.6;padding:8px 11px;border-radius:6px;width:230px;z-index:9999;font-weight:400;pointer-events:none;white-space:normal;box-shadow:0 4px 14px rgba(24,95,165,.3);text-transform:none;letter-spacing:0}
 #global-tip::before{content:'';position:absolute;bottom:100%;left:var(--arrow-left, 50%);transform:translateX(-50%);border:5px solid transparent;border-bottom-color:var(--blue)}
 </style>
+<style>
+.ptab-bar{display:flex;gap:0;margin-bottom:18px;border-bottom:.5px solid var(--paper-3);flex-wrap:wrap}
+.ptab{padding:7px 16px;font-size:13px;font-family:inherit;border:none;background:transparent;color:var(--ink-4);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;margin-bottom:-1px}
+.ptab:hover{color:var(--ink)}.ptab.on{color:var(--blue);border-bottom-color:var(--blue);font-weight:500}
+.ptab-pane{display:none}.ptab-pane.on{display:block}
+.persp-bar{display:flex;gap:0;margin:8px 10px 6px;border:.5px solid var(--paper-3);border-radius:6px;overflow:hidden}
+.persp-btn{flex:1;padding:5px 0;font-size:11px;font-weight:500;text-align:center;cursor:pointer;background:#fff;color:var(--ink-4);border:none;transition:all .15s;user-select:none}
+.persp-btn.on{background:var(--blue);color:#fff}
+.acc-group{border-bottom:.5px solid var(--paper-2)}
+.acc-head{display:flex;align-items:center;justify-content:space-between;padding:8px 14px 7px;cursor:pointer;user-select:none}
+.acc-head:hover{background:var(--paper)}.acc-title{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-4)}
+.acc-arrow{font-size:9px;color:var(--ink-5);transition:transform .2s;display:inline-block}
+.acc-group.open .acc-arrow{transform:rotate(90deg)}.acc-body{display:none;padding-bottom:4px}.acc-group.open .acc-body{display:block}
+.persp-section{display:none}.persp-section.on{display:block}
+.topbar-ctx{position:sticky;top:0;z-index:50;background:#fff;border-bottom:.5px solid var(--paper-3);padding:6px 28px;display:flex;justify-content:space-between;align-items:center}
+</style>
 </head>
 <body>
 <div id="global-tip"></div>
 <div class="app">
 <div class="sidebar">
   <div class="sidebar-header">
-    <div class="sidebar-logo">Vern</div>
-    <div class="sidebar-sub">Mambus AB · Investeringsanalyse</div>
+    <div class="sidebar-logo">Vern / Mambus AB</div>
+    <div class="sidebar-sub">Analyse &amp; investering</div>
   </div>
   <nav class="sidebar-nav">
-    <div class="nav-section">Analyse</div>
-    <div class="nav-item active" onclick="go('oversikt',this)"><div class="nav-dot"></div><span>Oversikt</span></div>
-    <div class="nav-item" onclick="go('vern',this)"><div class="nav-dot"></div><span>Vern &amp; MGA</span></div>
-    <div class="nav-sub" onclick="go('team',this)"><div class="nav-dot"></div><span>Kjerneteam</span></div>
-    <div class="nav-sub" onclick="go('advisory',this)"><div class="nav-dot"></div><span>Advisory board</span></div>
-    <div class="nav-item" onclick="go('businesscase',this)"><div class="nav-dot"></div><span>Business case</span></div>
-    <div class="nav-sub" onclick="go('regulering',this)"><div class="nav-dot"></div><span>Regulering</span></div>
-    <div class="nav-sub" onclick="go('risiko',this)"><div class="nav-dot"></div><span>Risikoer</span></div>
-    <div class="nav-sub" onclick="go('dynamikk',this)"><div class="nav-dot"></div><span>Markedsdynamikk</span></div>
-    <div class="nav-section">Marked</div>
-    <div class="nav-item" onclick="go('norge',this)"><div class="nav-dot"></div><span>Norge</span></div>
-    <div class="nav-item" onclick="go('norden',this)"><div class="nav-dot"></div><span>Norden</span></div>
-    <div class="nav-item" onclick="go('incumbents',this)"><div class="nav-dot"></div><span>Incumbents</span></div>
-    <div class="nav-section">Produkter</div>
-    <div class="nav-item" onclick="go('bilforsikring',this)"><div class="nav-dot"></div><span>Bilforsikring</span></div>
-    <div class="nav-item" onclick="go('boligforsikring',this)"><div class="nav-dot"></div><span>Boligforsikring</span></div>
-    <div class="nav-section">Vurdering</div>
-    <div class="nav-item" onclick="go('skatt',this)"><div class="nav-dot"></div><span>Skatt</span></div>
-    <div class="nav-item" onclick="go('startuplab',this)"><div class="nav-dot"></div><span>Startuplab</span></div>
-    <div class="nav-sub" onclick="go('engelinvestor',this)"><div class="nav-dot"></div><span>Engelinvestorvurdering</span></div>
-    <div class="nav-sub" onclick="go('investorkomm',this)"><div class="nav-dot"></div><span>Kommunikasjonslogg</span></div>
+    <div class="persp-bar">
+      <button class="persp-btn on" onclick="showPersp('co',this)">Selskapet</button>
+      <button class="persp-btn" onclick="showPersp('inv',this)" style="border-left:.5px solid var(--paper-3)">Investorene</button>
+    </div>
+    <div class="persp-section on" id="persp-co">
+      <div class="acc-group open" id="ag-a">
+        <div class="acc-head" onclick="toggleAcc('ag-a')"><span class="acc-title">Selskapet</span><span class="acc-arrow">▶</span></div>
+        <div class="acc-body">
+          <div class="nav-item active" onclick="go('oversikt',this)"><div class="nav-dot"></div><span>Oversikt</span><span style="width:6px;height:6px;border-radius:50%;background:#1D9E75;flex-shrink:0;margin-left:auto" title="Oppdatert"></span></div>
+          <div class="nav-item" onclick="go('vern',this)"><div class="nav-dot"></div><span>Vern &amp; team</span><span style="width:6px;height:6px;border-radius:50%;background:#1D9E75;flex-shrink:0;margin-left:auto" title="Fullført"></span></div>
+          <div class="nav-item" onclick="go('businesscase',this)"><div class="nav-dot"></div><span>Business case</span><span style="width:6px;height:6px;border-radius:50%;background:#C97A1A;flex-shrink:0;margin-left:auto" title="Carrier åpen"></span></div>
+          <div class="nav-item" onclick="go('vurdering',this)"><div class="nav-dot"></div><span>Vurdering</span><span style="width:6px;height:6px;border-radius:50%;background:#C97A1A;flex-shrink:0;margin-left:auto" title="Skatt avklar"></span></div>
+        </div>
+      </div>
+      <div class="acc-group" id="ag-m">
+        <div class="acc-head" onclick="toggleAcc('ag-m')"><span class="acc-title">Marked</span><span class="acc-arrow">▶</span></div>
+        <div class="acc-body">
+          <div class="nav-item" onclick="go('marked',this)"><div class="nav-dot"></div><span>Norge &amp; Norden</span><span style="width:6px;height:6px;border-radius:50%;background:#1D9E75;flex-shrink:0;margin-left:auto" title="Oppdatert"></span></div>
+          <div class="nav-item" onclick="go('produkter',this)"><div class="nav-dot"></div><span>Produkter</span><span style="width:6px;height:6px;border-radius:50%;background:#1D9E75;flex-shrink:0;margin-left:auto" title="Oppdatert"></span></div>
+        </div>
+      </div>
+    </div>
+    <div class="persp-section" id="persp-inv">
+      <div class="acc-group open" id="ag-k">
+        <div class="acc-head" onclick="toggleAcc('ag-k')" style="background:var(--amber-ll)"><span class="acc-title" style="color:var(--amber)">Kapital</span><span class="acc-arrow">▶</span></div>
+        <div class="acc-body">
+          <div class="nav-item" onclick="go('inv-oversikt',this)"><div class="nav-dot"></div><span>Rundeoversikt</span><span style="width:6px;height:6px;border-radius:50%;background:#C97A1A;flex-shrink:0;margin-left:auto" title="35% bekreftet"></span></div>
+          <div class="nav-item" onclick="go('captable',this)"><div class="nav-dot"></div><span>Cap table &amp; avkastning</span><span style="width:6px;height:6px;border-radius:50%;background:#C97A1A;flex-shrink:0;margin-left:auto" title="Cap avventes"></span></div>
+          <div class="nav-item" onclick="go('sensitivitet',this)"><div class="nav-dot"></div><span>Sensitivitet MGA</span><span style="width:6px;height:6px;border-radius:50%;background:#1D9E75;flex-shrink:0;margin-left:auto" title="Oppdatert"></span></div>
+        </div>
+      </div>
+      <div class="acc-group" id="ag-j">
+        <div class="acc-head" onclick="toggleAcc('ag-j')" style="background:var(--amber-ll)"><span class="acc-title" style="color:var(--amber)">Juridisk &amp; partnere</span><span class="acc-arrow">▶</span></div>
+        <div class="acc-body">
+          <div class="nav-item" onclick="go('inv-juridisk',this)"><div class="nav-dot"></div><span>SHA &amp; rettigheter</span><span style="width:6px;height:6px;border-radius:50%;background:#C97A1A;flex-shrink:0;margin-left:auto" title="Base FAA åpen"></span></div>
+          <div class="nav-item" onclick="go('inv-partnere',this)"><div class="nav-dot"></div><span>Affectum &amp; Base Bedrift</span><span style="width:6px;height:6px;border-radius:50%;background:#C97A1A;flex-shrink:0;margin-left:auto" title="Base FAA åpen"></span></div>
+          <div class="nav-item" onclick="go('inv-rapporter',this)"><div class="nav-dot"></div><span>Rapporter &amp; KPI</span><span style="width:6px;height:6px;border-radius:50%;background:#C97A1A;flex-shrink:0;margin-left:auto" title="Q1 avventes"></span></div>
+        </div>
+      </div>
+    </div>
+    <div style="padding:10px 14px;border-top:.5px solid var(--paper-2);margin-top:4px">
+      <div style="font-size:10px;color:var(--ink-5);margin-bottom:5px;letter-spacing:.04em">STATUS</div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--ink-4)"><span style="width:7px;height:7px;border-radius:50%;background:#1D9E75;flex-shrink:0"></span>Bekreftet / fullført</div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--ink-4)"><span style="width:7px;height:7px;border-radius:50%;background:#C97A1A;flex-shrink:0"></span>Åpent / avventes</div>
+      </div>
+    </div>
   </nav>
 </div>
 <div class="main" id="main">
-<div style="position:sticky;top:0;z-index:50;background:#fff;border-bottom:.5px solid var(--paper-3);padding:8px 32px;display:flex;justify-content:flex-end;align-items:center;gap:20px">
-  <div style="display:flex;gap:6px;align-items:center">
-    <button onclick="go('captable',this)" id="btn-captable"
-      style="padding:5px 13px;font-size:12px;font-family:inherit;border:.5px solid var(--paper-3);border-radius:20px;background:#fff;color:var(--ink-3);cursor:pointer;transition:all .15s;font-weight:400"
-      onmouseover="this.style.background='var(--paper)'" onmouseout="if(!this.classList.contains('btn-active'))this.style.background='#fff'">Cap table</button>
-    <button onclick="go('irr',this)" id="btn-irr"
-      style="padding:5px 13px;font-size:12px;font-family:inherit;border:.5px solid var(--paper-3);border-radius:20px;background:#fff;color:var(--ink-3);cursor:pointer;transition:all .15s;font-weight:400"
-      onmouseover="this.style.background='var(--paper)'" onmouseout="if(!this.classList.contains('btn-active'))this.style.background='#fff'">IRR / MOIC</button>
-    <button onclick="go('runway',this)" id="btn-runway"
-      style="padding:5px 13px;font-size:12px;font-family:inherit;border:.5px solid var(--paper-3);border-radius:20px;background:#fff;color:var(--ink-3);cursor:pointer;transition:all .15s;font-weight:400"
-      onmouseover="this.style.background='var(--paper)'" onmouseout="if(!this.classList.contains('btn-active'))this.style.background='#fff'">Runway</button>
-    <button onclick="go('sensitivitet',this)" id="btn-sensitivitet"
-      style="padding:5px 13px;font-size:12px;font-family:inherit;border:.5px solid var(--paper-3);border-radius:20px;background:#fff;color:var(--ink-3);cursor:pointer;transition:all .15s;font-weight:400"
-      onmouseover="this.style.background='var(--paper)'" onmouseout="if(!this.classList.contains('btn-active'))this.style.background='#fff'">Sensitivitet MGA</button>
-  </div>
-  <div style="font-size:11px;color:var(--ink-4);text-align:right;line-height:1.7;border-left:.5px solid var(--paper-3);padding-left:20px">
-    <span style="color:var(--ink-3);font-weight:500">Affectum AS (987 827 637) · Base Bedrift AS (998 625 084)</span><br>
-    Konvertible lån · 2,0 mNOK · Mambus AB org.nr 559553-1061
+<div class="topbar-ctx">
+  <div style="font-size:12px;color:var(--ink-3)"><span style="font-weight:500">Mambus AB</span><span style="color:var(--ink-5);margin:0 6px">·</span><span id="topbar-section" style="color:var(--ink-4)">Oversikt</span></div>
+  <div style="font-size:11px;color:var(--ink-5)">
+    <span style="color:var(--blue);font-weight:500">Affectum AS</span> 1,5 mNOK
+    <span style="margin:0 5px">·</span>
+    <span style="color:var(--amber);font-weight:500">Base Bedrift AS</span> 0,5 mNOK
+    <span style="margin:0 5px">·</span> SHA mars 2026
   </div>
 </div>
 
-<!-- OVERSIKT -->
 <div id="oversikt" class="page active">
   <div class="page-header">
     <div class="page-title">Vurdering av investorers konvertible lån til Mambus AB (Vern)</div>
     <div class="page-desc">Pre-seed nordisk skadeforsikringsutfordrer med MGA-modell. To investorer stiller hvert sitt konvertible lån på likelydende vilkår. Signaturforespørsel sendt 14. april 2026 via Dropbox Sign. Selskapsstruktur: Mambus AB (morselskap, Sverige) · driftsselskap under etablering.</div>
   </div>
 
-  <div class="g3" style="margin-bottom:12px">
-    <div style="background:#fff;border:.5px solid var(--blue-l);border-radius:var(--r-lg);padding:18px 20px">
-      <div style="font-size:11px;color:var(--blue);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Affectum AS</div>
-      <div style="font-size:10px;color:var(--ink-5);margin-bottom:8px">org.nr. 987 827 637 · Bodø</div>
-      <div class="card-big" style="color:var(--blue)">1,5 mNOK</div>
-      <div style="font-size:13px;color:var(--ink-4);margin-bottom:10px">75% av de to investorene</div>
-      <table style="font-size:13px">
-        <tr><td style="border:none;padding:2px 8px 2px 0;color:var(--ink-4)">Andel av seed</td><td style="border:none;padding:2px 0"><strong>22,2%</strong></td></tr>
-        <tr><td style="border:none;padding:2px 8px 2px 0;color:var(--ink-4)">Post-conv. andel</td><td style="border:none;padding:2px 0"><strong>~6,5%</strong></td></tr>
-        <tr><td style="border:none;padding:2px 8px 2px 0;color:var(--ink-4)">Nærstående</td><td style="border:none;padding:2px 0"><span class="badge badge-amber">Ja – sktl. §13-1</span></td></tr>
-      </table>
+<div style="margin-bottom:18px">
+  <div style="display:flex;align-items:center;gap:0;position:relative">
+    <!-- Linje bak -->
+    <div style="position:absolute;top:14px;left:14px;right:14px;height:2px;background:var(--paper-3);z-index:0"></div>
+    <!-- Milepæler -->
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;z-index:1">
+      <div style="width:28px;height:28px;border-radius:50%;background:#1D9E75;display:flex;align-items:center;justify-content:center">
+        <svg width="12" height="12" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+      </div>
+      <div style="font-size:10px;font-weight:600;color:#1D9E75;text-align:center">Des 2025</div>
+      <div style="font-size:10px;color:var(--ink-4);text-align:center;line-height:1.4">200+ leads<br>Eir-dialog</div>
     </div>
-
-    <div style="background:#fff;border:.5px solid var(--amber-l);border-radius:var(--r-lg);padding:18px 20px">
-      <div style="font-size:11px;color:var(--amber);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Base Bedrift AS</div>
-      <div style="font-size:10px;color:var(--ink-5);margin-bottom:8px">org.nr. 998 625 084 · Bodø</div>
-      <div class="card-big" style="color:var(--amber)">0,5 mNOK</div>
-      <div style="font-size:13px;color:var(--ink-4);margin-bottom:10px">25% av de to investorene</div>
-      <table style="font-size:13px">
-        <tr><td style="border:none;padding:2px 8px 2px 0;color:var(--ink-4)">Andel av seed</td><td style="border:none;padding:2px 0"><strong>5,6%</strong></td></tr>
-        <tr><td style="border:none;padding:2px 8px 2px 0;color:var(--ink-4)">Post-conv. andel</td><td style="border:none;padding:2px 0"><strong>~2,2%</strong></td></tr>
-        <tr><td style="border:none;padding:2px 8px 2px 0;color:var(--ink-4)">Nærstående</td><td style="border:none;padding:2px 0"><span class="badge badge-green">Nei</span></td></tr>
-      </table>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;z-index:1">
+      <div style="width:28px;height:28px;border-radius:50%;background:#1D9E75;display:flex;align-items:center;justify-content:center">
+        <svg width="12" height="12" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+      </div>
+      <div style="font-size:10px;font-weight:600;color:#1D9E75;text-align:center">Feb 2026</div>
+      <div style="font-size:10px;color:var(--ink-4);text-align:center;line-height:1.4">Sverige<br>WISE-instrument</div>
     </div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;z-index:1">
+      <div style="width:28px;height:28px;border-radius:50%;background:#1D9E75;display:flex;align-items:center;justify-content:center">
+        <svg width="12" height="12" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+      </div>
+      <div style="font-size:10px;font-weight:600;color:#1D9E75;text-align:center">Mars 2026</div>
+      <div style="font-size:10px;color:var(--ink-4);text-align:center;line-height:1.4">1 500 venteliste<br>SHA signert</div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;z-index:1">
+      <div style="width:28px;height:28px;border-radius:50%;background:#185FA5;display:flex;align-items:center;justify-content:center">
+        <svg width="12" height="12" viewBox="0 0 12 12"><circle cx="6" cy="6" r="3" fill="#fff"/></svg>
+      </div>
+      <div style="font-size:10px;font-weight:600;color:#185FA5;text-align:center">Apr 2026</div>
+      <div style="font-size:10px;color:var(--ink-4);text-align:center;line-height:1.4">FAA Affectum<br>signert</div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;z-index:1">
+      <div style="width:28px;height:28px;border-radius:50%;background:#C97A1A;border:2px solid #C97A1A;display:flex;align-items:center;justify-content:center">
+        <div style="width:8px;height:8px;border-radius:50%;background:#fdf5e6"></div>
+      </div>
+      <div style="font-size:10px;font-weight:600;color:#C97A1A;text-align:center">Q2 2026</div>
+      <div style="font-size:10px;color:var(--ink-4);text-align:center;line-height:1.4">Carrier Eir<br>Lisens søknad</div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;z-index:1">
+      <div style="width:28px;height:28px;border-radius:50%;background:var(--paper-2);border:2px solid var(--paper-3);display:flex;align-items:center;justify-content:center">
+        <div style="width:8px;height:8px;border-radius:50%;background:var(--paper-3)"></div>
+      </div>
+      <div style="font-size:10px;font-weight:600;color:var(--ink-4);text-align:center">H2 2026</div>
+      <div style="font-size:10px;color:var(--ink-4);text-align:center;line-height:1.4">Produktlansering<br>Norge</div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;z-index:1">
+      <div style="width:28px;height:28px;border-radius:50%;background:var(--paper-2);border:2px solid var(--paper-3);display:flex;align-items:center;justify-content:center">
+        <div style="width:8px;height:8px;border-radius:50%;background:var(--paper-3)"></div>
+      </div>
+      <div style="font-size:10px;font-weight:600;color:var(--ink-4);text-align:center">2031</div>
+      <div style="font-size:10px;color:var(--ink-4);text-align:center;line-height:1.4">Konvertering<br>WISE-lån</div>
+    </div>
+  </div>
+</div>
+  <div class="g4" style="margin-bottom:12px">
+    <div class="card"><div class="card-title">Affectum AS</div><div class="card-big" style="color:var(--blue)">1,5 mNOK</div><div class="card-sub">Halvard Nordang · FAA signert 14.04.26</div></div>
+    <div class="card"><div class="card-title">Base Bedrift AS</div><div class="card-big" style="color:var(--amber)">0,5 mNOK</div><div class="card-sub">Brynjar Storvik · FAA avventes</div></div>
+    <div class="card"><div class="card-title">Valuation cap</div><div class="card-big">50 mNOK</div><div class="card-sub">Pre-money · kurs NOK 50–500/aksje</div></div>
+    <div class="card"><div class="card-title">Løpetid</div><div class="card-big">Til 2031</div><div class="card-sub">Tvungen konvertering på slutt-dag</div></div>
   </div>
 
   <div class="g3" style="margin-bottom:12px">
-    <div class="card">
-      <div class="card-title">Carrier-status</div>
+    <div class="card" onclick="go('vern',document.querySelector('[onclick*=\"go(\'vern\'\"]'))" style="cursor:pointer" title="Åpne Vern & MGA">
+      <div class="card-title">Carrier-status <span style="font-size:10px;color:var(--blue);font-weight:400;float:right">→ Vern &amp; MGA</span></div>
       <div class="card-big" style="color:var(--amber)">Eir AS</div>
       <div class="card-sub">Forhandling pågår · avklaring Q2 2026</div>
       <div style="font-size:12px;color:var(--ink-4);margin-top:8px;line-height:1.7">Svensk carrier-leverandør. Leverer lisens, reassuranse og skadehåndtering som pakke. Intensiv dialog siden des. 2025. Reduserer time-to-market med anslått 6+ mnd.</div>
     </div>
-    <div class="card">
-      <div class="card-title">Venteliste kunder</div>
+    <div class="card" onclick="go('businesscase',null)" style="cursor:pointer" title="Åpne Business case">
+      <div class="card-title">Venteliste kunder <span style="font-size:10px;color:var(--blue);font-weight:400;float:right">→ Business case</span></div>
       <div class="card-big" style="color:var(--green)">1 500+</div>
       <div class="card-sub">Per mars 2026 · CAC &lt; NOK 200</div>
       <div style="font-size:12px;color:var(--ink-4);margin-top:8px;line-height:1.7">Validert via «falskt brand» med SoMe-annonsering. Målgruppe: lavrisiko-kunder med god økonomi og tilnærmet null skadehistorikk. CAC kuttet ~50% siden jan. 2026.</div>
     </div>
-    <div class="card">
-      <div class="card-title">Totalramme runden</div>
+    <div class="card" onclick="go('inv-oversikt',null)" style="cursor:pointer" title="Åpne Rundeoversikt">
+      <div class="card-title">Totalramme runden <span style="font-size:10px;color:var(--blue);font-weight:400;float:right">→ Rundeoversikt</span></div>
       <div class="card-big" style="color:var(--blue)">5–8 mNOK</div>
       <div class="card-sub">Avhenger av Startuplab (3 mNOK)</div>
       <div style="font-size:12px;color:var(--ink-4);margin-top:8px;line-height:1.7">Affectum AS (1,5 mNOK) + Base Bedrift AS (0,5 mNOK) = 2,0 mNOK bekreftet. Øvrige investorer ukjent. Startuplab vurderer 3 mNOK – avgjør total runway.</div>
     </div>
   </div>
 
-  <div class="g4">
-    <div class="card"><div class="card-title">Samlet lånebeløp (de to)</div><div class="card-big">NOK 2,0 mill</div><div class="card-sub">Totalramme runden: 5–8 mNOK · Startuplab vurderer 3 mNOK</div></div>
-    <div class="card"><div class="card-title">Verdivurderingstak</div><div class="card-big">NOK 50 mill</div><div class="card-sub">Konverteringskurs NOK 50–500/aksje</div></div>
-    <div class="card"><div class="card-title">Rabatt neste runde</div><div class="card-big">20%</div><div class="card-sub">På tegningskurs i Finansieringsrunda</div></div>
-    <div class="card"><div class="card-title">Løpetid</div><div class="card-big">Til 2031</div><div class="card-sub">Tvungen konvertering på Slutdagen</div></div>
-  </div>
+
   <div class="g2">
     <div class="card">
       <div class="card-title">Scorekort</div>
@@ -198,8 +260,8 @@ th.tip > span.tip-icon{vertical-align:middle}
         <tr><td>MGA-modell</td><td><span class="badge badge-green">4/5</span></td><td>Kapitaleffektiv, skalérbar</td></tr>
         <tr><td>Team</td><td><span class="badge badge-green">4/5</span></td><td>Komplementær bakgrunn, mangler salg</td></tr>
         <tr><td>Traction / validering</td><td><span class="badge badge-green">4/5</span></td><td>1 500+ ventelistekunder · CAC under NOK 200 · prisdata fra konkurrenter live</td></tr>
-        <tr><td>Carrier-status</td><td><span class="badge badge-amber">3/5</span></td><td>Eir (SE) i intensiv dating – avklaring forventet medio 2026</td></tr>
-        <tr><td>Nærstående-risiko</td><td><span class="badge badge-amber">3/5</span></td><td>Skattemessige særhensyn krever rådgiver</td></tr>
+        <tr style="cursor:pointer" onclick="go('vern',null)"><td>Carrier-status</td><td><span class="badge badge-amber">3/5</span></td><td>Eir (SE) i intensiv dating – avklaring forventet medio 2026 <span style="color:var(--blue);font-size:11px">→ Vern</span></td></tr>
+        <tr style="cursor:pointer" onclick="go('vurdering',null);ptab('vurde','skatt',document.querySelector('.ptab'))"><td>Nærstående-risiko</td><td><span class="badge badge-amber">3/5</span></td><td>Skattemessige særhensyn krever rådgiver <span style="color:var(--blue);font-size:11px">→ Skatt</span></td></tr>
         <tr><td>Likviditet/exit</td><td><span class="badge badge-amber">3/5</span></td><td>Illiquid pre-seed, lang horisont</td></tr>
       </table>
     </div>
@@ -209,9 +271,9 @@ th.tip > span.tip-icon{vertical-align:middle}
         <div style="font-size:15px;color:var(--ink-3);line-height:1.8">
           <div style="margin-bottom:6px">① <strong>Carrier Eir:</strong> Dialogen pågår (mars-epost). Er avtalebetingelser – provisjonssats, underwriting-myndighet, oppsigelsesvilkår – avklart pr. april 2026?</div>
           <div style="margin-bottom:6px">② <strong>Startuplab 3 mNOK:</strong> Avklares/avklart? Utfallet avgjør om totalrunden ender på 5 mNOK (uten) eller 8 mNOK (med). Direkte konsekvens for runway og dilution.</div>
-          <div style="margin-bottom:6px">③ <strong>Gjeldsbrev (utfylt):</strong> Affectum AS og Base Bedrift AS har mottatt SHA til signering 14. april 2026 via Dropbox Sign. Selve gjeldsbrevene med beløp og eierandel er ikke bekreftet mottatt.</div>
+          <div style="margin-bottom:6px">③ <strong>Gjeldsbrev (utfylt):</strong> Affectum AS signerte FAA 14. april 2026 via Dropbox Sign. Base Bedrift AS: FAA avventes. Selve gjeldsbrevene med beløp og eierandel er ikke bekreftet mottatt per 14. april 2026. <span class="badge badge-amber">Åpent punkt</span></div>
           <div style="margin-bottom:6px">④ <strong>Driftsselskap Sverige:</strong> Epost (februar) angir morselskap + driftsselskap under etablering. Er dette fullført? Agentlisens søknad hos Finansinspektionen – status?</div>
-          <div>⑤ <strong>Skattemessig struktur:</strong> Konvertering av fordringen er skattepliktig realisasjon for norske AS. Avklar med skatterådgiver FØR signering.</div>
+          <div>⑤ <strong>Skattemessig struktur:</strong> Konvertering av fordringen er skattepliktig realisasjon for norske AS (Rt. 2011-1620). <span class="badge badge-amber">Avklar med skatterådgiver — gjelder begge investorer.</span></div>
         </div>
       </div>
       <div class="danger">
@@ -266,7 +328,7 @@ th.tip > span.tip-icon{vertical-align:middle}
       <div style="display:flex;gap:16px;align-items:flex-start;padding:10px 0;border-bottom:.5px solid var(--paper-2)">
         <div style="min-width:90px;font-size:11px;font-weight:600;color:var(--ink-5);padding-top:2px">14. apr. 2026</div>
         <div style="flex:1;font-size:13px;color:var(--ink-3);line-height:1.7"><strong>SHA sendt til signering</strong> via Dropbox Sign til Halvard Nordang (Affectum AS). Melding: «Velkommen til Vern!». Base Bedrift AS antas å ha mottatt tilsvarende (likelydende vilkår bekreftet).</div>
-        <div style="min-width:80px;text-align:right"><span class="badge badge-blue">I dag</span></div>
+        <div style="min-width:80px;text-align:right"><span class="badge badge-green">Affectum signert</span></div>
       </div>
       <div style="display:flex;gap:16px;align-items:flex-start;padding:10px 0;border-bottom:.5px solid var(--paper-2)">
         <div style="min-width:90px;font-size:11px;font-weight:600;color:var(--ink-5);padding-top:2px">Q2 2026</div>
@@ -282,13 +344,17 @@ th.tip > span.tip-icon{vertical-align:middle}
   </div>
 </div>
 
-<!-- VERN & MGA -->
 <div id="vern" class="page">
   <div class="page-header">
-    <div class="page-title">Vern &amp; MGA-modellen</div>
-    <div class="page-desc">Mambus AB opererer under merkevaren Vern som en Managing General Agent (MGA) i det nordiske skadeforsikringsmarkedet. Primær carrier-kandidat: Eir (Sverige) – leverer carrier, lisens, reassuranse og skadehåndtering som pakke. Statusoppdatering mars 2026: intensiv dating, avklaring Q2 2026.</div>
+    <div class="page-title">Vern &amp; team</div>
+    <div class="page-desc">MGA-modell, kjerneteam og advisory board.</div>
   </div>
-  <div class="g2">
+  <div class="ptab-bar">
+    <button class="ptab on" onclick="ptab('vern','mga',this)">MGA-modell</button>
+    <button class="ptab" onclick="ptab('vern','team',this)">Kjerneteam</button>
+    <button class="ptab" onclick="ptab('vern','adv',this)">Advisory board</button>
+  </div>
+  <div id="vern-mga" class="ptab-pane on"><div class="g2">
     <div class="card">
       <div class="card-title">Hva er en MGA?</div>
       <div style="font-size:15px;color:var(--ink-3);line-height:1.8">
@@ -385,16 +451,8 @@ th.tip > span.tip-icon{vertical-align:middle}
         <div style="font-size:15px;color:var(--ink-4);line-height:1.7">Hjemforsikring via direkte kanal med AI-prismodell. 400 000+ kunder. Lønnsomhet fra år 3. Demonstrerer at MGA-modell med disruptiv prising fungerer i et etablert marked.</div>
       </div>
     </div>
-  </div>
-</div>
-
-<!-- KJERNETEAM -->
-<div id="team" class="page">
-  <div class="page-header">
-    <div class="page-title">Kjerneteam</div>
-    <div class="page-desc">Gründerne bak Vern og mulige tillegg til teamet.</div>
-  </div>
-  <div class="g2">
+  </div></div>
+<div id="vern-team" class="ptab-pane"><div class="g2">
     <div class="card">
       <div style="display:flex;gap:14px;align-items:flex-start">
         <div style="width:44px;height:44px;border-radius:50%;background:var(--blue-l);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:19px;color:var(--blue);flex-shrink:0">CD</div>
@@ -442,16 +500,8 @@ th.tip > span.tip-icon{vertical-align:middle}
   </div>
   <div class="warn">
     <strong>Teamvurdering:</strong> Gründer-duoen har komplementær kompetanse (kommersiell + teknologi), men ingen med sterk B2C-salgs- eller markedsføringsbakgrunn er identifisert. For et forsikringsprodukt der distribusjon er den kritiske suksessfaktoren, bør dette adresseres enten via ansettelse eller advisory.
-  </div>
-</div>
-
-<!-- ADVISORY BOARD -->
-<div id="advisory" class="page">
-  <div class="page-header">
-    <div class="page-title">Advisory board</div>
-    <div class="page-desc">Etablerte rådgivere med sektorrelevant erfaring.</div>
-  </div>
-  <div class="g2">
+  </div></div>
+<div id="vern-adv" class="ptab-pane"><div class="g2">
     <div class="card">
       <div style="font-weight:500;font-size:15px;margin-bottom:3px">Hans Petter Madsen</div>
       <div style="font-size:15px;color:var(--blue);margin-bottom:8px">Forsikringsbransje · Norge</div>
@@ -473,16 +523,21 @@ th.tip > span.tip-icon{vertical-align:middle}
       <div style="font-size:15px;color:var(--ink-3);line-height:1.7">CCO Validus Risk Management. 500+ mNOK hentet. Global skalering. Erfaring med kapitalreising og internasjonal vekst i forsikringsrelaterte selskaper.</div>
     </div>
   </div>
-  <div class="note">Advisory board dekker fire kritiske kompetanseområder: carrier-nettverk og bransjehistorikk (Madsen), D2C og digital skalering (Kvamme), strategi og ledernettverk (Holte), kapitalreising og internasjonal vekst (Blakstad). Formell engasjementsavtale og eventuelle opsjonsordninger bør dokumenteres.</div>
+  <div class="note">Advisory board dekker fire kritiske kompetanseområder: carrier-nettverk og bransjehistorikk (Madsen), D2C og digital skalering (Kvamme), strategi og ledernettverk (Holte), kapitalreising og internasjonal vekst (Blakstad). Formell engasjementsavtale og eventuelle opsjonsordninger bør dokumenteres.</div></div>
 </div>
 
-<!-- BUSINESS CASE -->
 <div id="businesscase" class="page">
   <div class="page-header">
     <div class="page-title">Business case</div>
-    <div class="page-desc">MGA-inntektsstruktur, kundevekst og lønnsomhetslogikk for Vern.</div>
+    <div class="page-desc">Forretningsmodell, regulering, risikoer og markedsdynamikk.</div>
   </div>
-  <div class="good"><strong>Traksjonsdata bekreftet mars 2026:</strong> 1 500+ personer på venteliste · CAC &lt; NOK 200 (kuttet ~50% mnd/mnd) · Live priseinnhenting fra konkurrenter · Kjøpsløp V1 under utvikling (Vipps + Bislab) · Forsikringskjernesystem snevret fra 20+ til 2 finalister. Advisory board Hans Petter Madsen jobber operativt med teamet på daglig basis.</div>
+  <div class="ptab-bar">
+    <button class="ptab on" onclick="ptab('busin','case',this)">Business case</button>
+    <button class="ptab" onclick="ptab('busin','reg',this)">Regulering</button>
+    <button class="ptab" onclick="ptab('busin','risk',this)">Risikoer</button>
+    <button class="ptab" onclick="ptab('busin','dyn',this)">Markedsdynamikk</button>
+  </div>
+  <div id="busin-case" class="ptab-pane on"><div class="good"><strong>Traksjonsdata bekreftet mars 2026:</strong> 1 500+ personer på venteliste · CAC &lt; NOK 200 (kuttet ~50% mnd/mnd) · Live priseinnhenting fra konkurrenter · Kjøpsløp V1 under utvikling (Vipps + Bislab) · Forsikringskjernesystem snevret fra 20+ til 2 finalister. Advisory board Hans Petter Madsen jobber operativt med teamet på daglig basis.</div>
   <div class="g4">
     <div class="card"><div class="card-title">Break-even kunder</div><div class="card-big">6 000</div><div class="card-sub">~mNOK 195 GWP</div></div>
     <div class="card"><div class="card-title">Margin ved 30k kunder</div><div class="card-big" style="color:var(--green)">50%+</div><div class="card-sub">ekskl. vekstkostnader</div></div>
@@ -545,593 +600,8 @@ th.tip > span.tip-icon{vertical-align:middle}
       <div class="card-title">Combined ratio – referanseverdier</div>
       <div style="height:180px"><canvas id="c-cr"></canvas></div>
     </div>
-  </div>
-</div>
-
-<!-- NORGE -->
-<div id="norge" class="page">
-  <div class="page-header">
-    <div class="page-title">Norge – primærmarked</div>
-    <div class="page-desc">Norsk P&amp;C-marked fra grunnlag til mulighet – SSB 11580 · Finans Norge Q4 2024</div>
-  </div>
-
-  <div class="g4">
-    <div class="card"><div class="card-title">Landbasert skadeforsikring Q4 2024</div><div class="card-big" style="color:var(--blue)">94,7 mrd</div><div class="card-sub">NOK bestandspremie · Finans Norge</div></div>
-    <div class="card"><div class="card-title">Vekst siden 2019</div><div class="card-big" style="color:var(--green)">+70,6%</div><div class="card-sub">Fra 55,5 mrd (2019) til 94,7 mrd NOK</div></div>
-    <div class="card"><div class="card-title">Verns adresserbare TAM</div><div class="card-big" style="color:var(--blue)">71,5 mrd</div><div class="card-sub">NOK · motor + bolig privatmarked 2024</div></div>
-    <div class="card"><div class="card-title">Premievekst 2024</div><div class="card-big" style="color:var(--green)">+11,6%</div><div class="card-sub">Fra Q4 2023 · sterkeste på ti år</div></div>
-  </div>
-
-  <div class="g2">
-    <div class="card">
-      <div class="card-title">P&amp;C-vekst 2019–2025 <span style="font-size:15px;color:var(--ink-5);font-weight:400">Finans Norge bestandspremie landbasert (mrd NOK)</span></div>
-      <div style="height:200px"><canvas id="c-novekst"></canvas></div>
-      <div style="font-size:15px;color:var(--ink-5);margin-top:6px;padding-top:6px;border-top:.5px solid var(--paper-2)">Veksten er strukturell: prisøkninger, økt forsikringssum og EV-relatert reprising – ikke konjunktur. Motorvogn fikk +20,5% i 2025 (Finans Norge).</div>
-    </div>
-    <div class="card">
-      <div class="card-title">Premievolum per produktgruppe – Q4 2024 <span style="font-size:15px;color:var(--ink-5);font-weight:400">Finans Norge bestandspremie (mill NOK)</span></div>
-      <div style="display:flex;gap:14px;margin-bottom:8px;font-size:15px;color:var(--ink-4)">
-        <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:2px;background:var(--blue)"></div>Verns adresserbare marked</div>
-        <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:2px;background:var(--ink-5)"></div>Øvrige bransjer</div>
-      </div>
-      <div style="height:200px"><canvas id="c-ssb-norge"></canvas></div>
-      <div style="font-size:15px;color:var(--ink-5);margin-top:6px;padding-top:6px;border-top:.5px solid var(--paper-2)">Motor + bolig = 35 600 + 18 100 = 53 700 mNOK av privatmarkedet (TAM inkl. næring: 71,5 mrd NOK).</div>
-    </div>
-  </div>
-
-  <div class="g2">
-    <div class="card">
-      <div class="card-title">Markedsandeler – skadeforsikring Norge Q4 2024 <span style="font-size:15px;color:var(--ink-5);font-weight:400">Finans Norge</span></div>
-      <div style="margin-bottom:8px">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px"><div style="font-size:15px;color:var(--ink-2);font-weight:500;width:185px">Gjensidige</div><div style="flex:1;height:6px;background:var(--paper-2);border-radius:3px;overflow:hidden"><div style="width:100%;height:100%;background:var(--blue);border-radius:3px"></div></div><div style="font-size:15px;color:var(--ink-4);width:62px;text-align:right;font-weight:500">26,3%</div></div>
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px"><div style="font-size:15px;color:var(--ink-2);width:185px">If Skadeforsikring</div><div style="flex:1;height:6px;background:var(--paper-2);border-radius:3px;overflow:hidden"><div style="width:74%;height:100%;background:var(--blue);border-radius:3px"></div></div><div style="font-size:15px;color:var(--ink-4);width:62px;text-align:right">~19–20%</div></div>
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px"><div style="font-size:15px;color:var(--ink-2);width:185px">Fremtind (inkl. Eika)</div><div style="flex:1;height:6px;background:var(--paper-2);border-radius:3px;overflow:hidden"><div style="width:70%;height:100%;background:var(--blue);border-radius:3px"></div></div><div style="font-size:15px;color:var(--ink-4);width:62px;text-align:right">~18–19%</div></div>
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px"><div style="font-size:15px;color:var(--ink-2);width:185px">Tryg (inkl. Codan)</div><div style="flex:1;height:6px;background:var(--paper-2);border-radius:3px;overflow:hidden"><div style="width:49%;height:100%;background:var(--blue);border-radius:3px"></div></div><div style="font-size:15px;color:var(--ink-4);width:62px;text-align:right">~13%</div></div>
-        <div style="height:.5px;background:var(--paper-3);margin:6px 0"></div>
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px"><div style="font-size:15px;color:var(--ink-4);width:185px">Storebrand</div><div style="flex:1;height:6px;background:var(--paper-2);border-radius:3px;overflow:hidden"><div style="width:20%;height:100%;background:var(--paper-4);border-radius:3px"></div></div><div style="font-size:15px;color:var(--ink-5);width:62px;text-align:right">5,2%</div></div>
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px"><div style="font-size:15px;color:var(--ink-4);width:185px">Frende</div><div style="flex:1;height:6px;background:var(--paper-2);border-radius:3px;overflow:hidden"><div style="width:14%;height:100%;background:var(--paper-4);border-radius:3px"></div></div><div style="font-size:15px;color:var(--ink-5);width:62px;text-align:right">3,7%</div></div>
-        <div style="display:flex;align-items:center;gap:8px"><div style="font-size:15px;color:var(--ink-4);width:185px">Øvrige (15+ selskaper)</div><div style="flex:1;height:6px;background:var(--paper-2);border-radius:3px;overflow:hidden"><div style="width:61%;height:100%;background:var(--paper-3);border-radius:3px"></div></div><div style="font-size:15px;color:var(--ink-5);width:62px;text-align:right">~16%</div></div>
-      </div>
-      <div style="font-size:15px;color:var(--ink-5);margin-top:4px">Top-4 samlet ~78,9% · ned fra 80,1% Q3 2023 · Eika fusjonerte inn i Fremtind 1. okt. 2024</div>
-    </div>
-    <div class="card">
-      <div class="card-title">De fire store – nøkkeldata</div>
-      <table>
-        <tr><th>Selskap</th><th>Andel</th><th>Eierskap</th><th>Komb.ratio</th></tr>
-        <tr style="background:var(--blue-ll)"><td style="font-weight:500;color:var(--blue)">Gjensidige</td><td style="font-weight:500;color:var(--blue)">26,3%</td><td>Norsk · børsnotert OSE</td><td><strong style="color:var(--green)">70,4%</strong> (2021 privat)</td></tr>
-        <tr><td style="font-weight:500">If</td><td>~19–20%</td><td>Finsk · heleid Sampo Group</td><td><strong>78,0%</strong> (2021)</td></tr>
-        <tr><td style="font-weight:500">Fremtind</td><td>~18–19%</td><td>SpareBank 1 + DNB + Eika</td><td>Ikke offentliggjort</td></tr>
-        <tr><td style="font-weight:500">Tryg</td><td>~13%</td><td>Dansk · børsnotert · inkl. Codan</td><td><strong>84,2%</strong> (2021 privat)</td></tr>
-      </table>
-      <div class="note" style="margin-top:8px">Privatsegmentet er langt mer lønnsomt enn samlede tall viser. Gjensidiges private komb.ratio 70,4% er ekstraordinært lavt – nettopp dette segmentet Vern sikter mot.</div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">Konsolidering 2022–2024 – strukturelle endringer</div>
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
-      <div style="background:var(--paper);border-radius:var(--r);padding:10px 12px">
-        <div style="font-size:15px;font-weight:500;color:var(--ink-4);margin-bottom:4px">Apr. 2022</div>
-        <div style="font-size:15px;font-weight:500;color:var(--ink);margin-bottom:3px">Tryg kjøper Codan Norge</div>
-        <div style="font-size:15px;color:var(--ink-3);line-height:1.6">Tryg øker fra ~9% til ~13%. Codan/RSA finnes ikke lenger som selvstendig aktør.</div>
-      </div>
-      <div style="background:var(--paper);border-radius:var(--r);padding:10px 12px">
-        <div style="font-size:15px;font-weight:500;color:var(--ink-4);margin-bottom:4px">Jul. 2022</div>
-        <div style="font-size:15px;font-weight:500;color:var(--ink);margin-bottom:3px">Storebrand overtar Danica</div>
-        <div style="font-size:15px;color:var(--ink-3);line-height:1.6">Storebrand øker fra ~4% til ~5%. Danica-merket forsvinner fra norsk skadeforsikring.</div>
-      </div>
-      <div style="background:var(--paper);border-radius:var(--r);padding:10px 12px">
-        <div style="font-size:15px;font-weight:500;color:var(--ink-4);margin-bottom:4px">Apr. 2024</div>
-        <div style="font-size:15px;font-weight:500;color:var(--ink);margin-bottom:3px">ERGO overtar helseforsikring</div>
-        <div style="font-size:15px;color:var(--ink-3);line-height:1.6">Storebrand selger behandlingsforsikring til ERGO Group (Storebrand ~5,2% ekskl. helse).</div>
-      </div>
-      <div style="background:var(--blue-ll);border-radius:var(--r);padding:10px 12px">
-        <div style="font-size:15px;font-weight:500;color:var(--blue);margin-bottom:4px">Okt. 2024</div>
-        <div style="font-size:15px;font-weight:500;color:var(--blue);margin-bottom:3px">Eika fusjonerer inn i Fremtind</div>
-        <div style="font-size:15px;color:var(--ink-3);line-height:1.6">Fremtind øker fra ~14–15% til ~18–19%. Eika (4%) eksisterer ikke lenger selvstendig.</div>
-      </div>
-    </div>
-    <div class="warn" style="margin-top:8px;margin-bottom:0">Top-4 har gått fra 80,1% → 78,9% siste år – marginal reduksjon, men konsentrasjonen er ekstraordinært høy. Nye fullverdige carriers forventes ikke å etablere seg, noe som gjør MGA-modellen til det reelle alternativet for nyetablerere.</div>
-  </div>
-
-  <div class="g2">
-    <div class="card">
-      <div class="card-title">Strukturelle muligheter</div>
-      <div style="font-size:15px;color:var(--ink-3);line-height:2">
-        <div><span class="badge badge-green">Mulighet</span> &nbsp;Ingen digital retail P&amp;C-utfordrer – unik posisjon i Norden</div>
-        <div><span class="badge badge-green">Mulighet</span> &nbsp;BankID-penetrasjon &gt;90% – infrastruktur klar for D2C</div>
-        <div><span class="badge badge-green">Mulighet</span> &nbsp;25% kundebyttefrekvens – ~720 000 bytter bilforsikring hvert år</div>
-        <div><span class="badge badge-green">Mulighet</span> &nbsp;EV-andel &gt;25% nyregistreringer – nye risikoprofiler reprises nå</div>
-        <div><span class="badge badge-green">Mulighet</span> &nbsp;Incumbents hever motor-rater +20,5% (2025) – kunder søker alternativer</div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title">Barrierer og kritiske gap</div>
-      <div style="font-size:15px;color:var(--ink-3);line-height:2">
-        <div><span class="badge badge-amber">Barriere</span> &nbsp;Naturskadepool obligatorisk – lik kostnad alle carriers</div>
-        <div><span class="badge badge-amber">Barriere</span> &nbsp;Boligforsikring: kun ~1–2% byttefrekvens – primært kryssalg</div>
-        <div><span class="badge badge-amber">Barriere</span> &nbsp;LO-innboforsikring blokkerer ~40% av innbomarkedet</div>
-        <div><span class="badge badge-red">Kritisk gap</span> &nbsp;Carrier-avtale ikke signert per mars 2026</div>
-        <div><span class="badge badge-red">Kritisk gap</span> &nbsp;Norsk datapipeline for polisehenting uavklart</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- NORDEN -->
-<div id="norden" class="page">
-  <div class="page-header">
-    <div class="page-title">Nordisk marked</div>
-    <div class="page-desc">Sammenligning av de fire nordiske skadeforsikringsmarkedene. Kilde: Sampo Plc årsrapport 2024, Swiss Re Sigma, Insurance Europe.</div>
-  </div>
-  <div class="g4">
-    <div class="card"><div class="card-title">Norge – bruttopremie</div><div class="card-big">EUR ~7 mrd</div><div class="card-sub">~NOK 81 000 pr. innb. (høyest)</div></div>
-    <div class="card"><div class="card-title">Sverige – bruttopremie</div><div class="card-big">EUR ~9 mrd</div><div class="card-sub">~NOK 54 000 pr. innb.</div></div>
-    <div class="card"><div class="card-title">Danmark – bruttopremie</div><div class="card-big">EUR ~8 mrd</div><div class="card-sub">~NOK 82 000 pr. innb.</div></div>
-    <div class="card"><div class="card-title">Finland – bruttopremie</div><div class="card-big">EUR ~4 mrd</div><div class="card-sub">~NOK 43 000 pr. innb. (lavest)</div></div>
-  </div>
-  <div class="card">
-    <div class="card-title">Combined ratio – nordisk skadeforsikring vs. Europa/UK (2012–2024)</div>
-    <div style="height:240px"><canvas id="c-cr-nordic"></canvas></div>
-    <div style="font-size:15px;color:var(--ink-5);margin-top:6px">Nordisk combined ratio jevnt under 90% – klart bedre enn europeisk gjennomsnitt. Høy lønnsomhet for etablerte aktører.</div>
-  </div>
-  <div class="g2w">
-    <div class="card">
-      <div class="card-title">Strukturelle forklaringer – premie pr. innbygger</div>
-      <div style="font-size:15px;color:var(--ink-3);line-height:1.9">
-        <div style="margin-bottom:6px"><strong>Norge og Danmark høyere enn Sverige/Finland:</strong></div>
-        <div style="margin-bottom:4px">• <strong>Eiendomsverdier:</strong> Høyere boligpriser gir høyere boligforsikringspremier</div>
-        <div style="margin-bottom:4px">• <strong>Bilavgifter:</strong> Norske nybilavgifter gir høyere kasko-premier</div>
-        <div style="margin-bottom:4px">• <strong>Velferdsstatsubstitusjon (Finland):</strong> OP Gruppens bankforsikring integrerer helsedekninger i kollektive ordninger</div>
-        <div style="margin-bottom:4px">• <strong>Byggekostnader:</strong> Norge har Europas høyeste byggekostnader</div>
-        <div>• <strong>Dekningsnormer:</strong> Norske kunder har høyere forventning til dekningsbredde</div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title">Sanity-sjekk: sammenligner vi epler og pærer?</div>
-      <table>
-        <tr><th>Faktor</th><th>Effekt</th></tr>
-        <tr><td>Totalt marked inkl. liv</td><td>Overvurderer forskjell</td></tr>
-        <tr><td>Kollektive/yrkesskade-andel varierer</td><td>Påvirker per capita</td></tr>
-        <tr><td>Valutakurs (EUR/NOK)</td><td>Forsterker NOK-tall</td></tr>
-        <tr><td>OP Bank (Finland) bundler forsikring</td><td>Underrapporterer premie</td></tr>
-        <tr><td>Norsk bilpark: høy elbil-andel</td><td>Høyere kasko pr. kjøretøy</td></tr>
-      </table>
-      <div style="font-size:15px;color:var(--ink-5);margin-top:8px">Konklusjon: Retningene stemmer, men absolutte tall bør tolkes med varsomhet.</div>
-    </div>
-  </div>
-</div>
-
-<!-- INCUMBENTS -->
-<div id="incumbents" class="page">
-  <div class="page-header">
-    <div class="page-title">Etablerte aktører</div>
-    <div class="page-desc">Combined ratio og lønnsomhetsprofil for de nordiske forsikringskonsernene. Kilde: Selskapenes årsrapporter 2023–2024.</div>
-  </div>
-  <div class="card">
-    <div class="card-title">Combined ratio – nordiske konserner (2023–2024)</div>
-    <div style="height:260px"><canvas id="c-inc"></canvas></div>
-    <div style="font-size:15px;color:var(--ink-5);margin-top:6px">Combined ratio under 100% = teknisk overskudd. Nordiske aktører er konsistent lønnsomme.</div>
-  </div>
-  <div class="g2">
-    <div class="card">
-      <div class="card-title">Gjensidige</div>
-      <table>
-        <tr><th>Nøkkeltall</th><th>2023</th></tr>
-        <tr><td>Bruttopremie</td><td>NOK 36,7 mrd</td></tr>
-        <tr><td>Combined ratio (privat)</td><td>~87%</td></tr>
-        <tr><td>Markedsandel Norge</td><td>~29%</td></tr>
-        <tr><td>Kundelojalitet</td><td>Svært høy (gjensidighet)</td></tr>
-      </table>
-    </div>
-    <div class="card">
-      <div class="card-title">Fremtind</div>
-      <table>
-        <tr><th>Nøkkeltall</th><th>2023</th></tr>
-        <tr><td>Bruttopremie</td><td>NOK ~18 mrd</td></tr>
-        <tr><td>Combined ratio</td><td>~88%</td></tr>
-        <tr><td>Distribusjonskanal</td><td>SpareBank 1, DNB, Eika-banker</td></tr>
-        <tr><td>Sårbarhet</td><td>Bankavhengig distribusjon</td></tr>
-      </table>
-    </div>
-    <div class="card">
-      <div class="card-title">If Skadeforsikring</div>
-      <table>
-        <tr><th>Nøkkeltall</th><th>2023</th></tr>
-        <tr><td>Nordisk markedsandel</td><td>~19%</td></tr>
-        <tr><td>Combined ratio (privat)</td><td>~78%</td></tr>
-        <tr><td>Eier</td><td>Sampo (Finland)</td></tr>
-        <tr><td>Styrke</td><td>Lavest combined ratio i Norden</td></tr>
-      </table>
-    </div>
-    <div class="card">
-      <div class="card-title">Tryg</div>
-      <table>
-        <tr><th>Nøkkeltall</th><th>2023</th></tr>
-        <tr><td>Bruttopremie (NO+DK+SE)</td><td>DKK ~32 mrd</td></tr>
-        <tr><td>Combined ratio</td><td>~82–84%</td></tr>
-        <tr><td>Eier</td><td>Børsnotert (DK)</td></tr>
-        <tr><td>Norsk tilstedeværelse</td><td>Inkl. Codan Norge</td></tr>
-      </table>
-    </div>
-  </div>
-  <div class="note"><strong>Implikasjon for Vern:</strong> De store er ikke teknisk ineffektive – combined ratio er lav. Muligheten er distribusjonskostnad og prisfleksibilitet via MGA-modellen. En digital-first distribusjonskanal med lavere kundeanskaffelseskostnad er den reelle differensieringsmuligheten.</div>
-</div>
-
-<!-- MARKEDSDYNAMIKK -->
-<div id="dynamikk" class="page">
-  <div class="page-header">
-    <div class="page-title">Markedsdynamikk</div>
-    <div class="page-desc">Trender, drivere og forstyrrende krefter i nordisk skadeforsikring.</div>
-  </div>
-  <div class="g2">
-    <div class="card">
-      <div class="card-title">Insurely – distribusjonsplattform</div>
-      <div style="font-size:15px;color:var(--ink-3);line-height:1.8">Insurely er en nordisk InsurTech-plattform som kobler forsikringsselskaper med digitale distribusjonskanaler. Plattformen tilbyr:
-        <ul style="margin:8px 0 0 16px">
-          <li>API-integrasjon mot biler, bolig og andre forsikringsobjekter</li>
-          <li>White-label distribusjon via banker, bilforhandlere og andre partnere</li>
-          <li>Tjenester i Norge, Sverige, Danmark og Finland</li>
-        </ul>
-        <div style="margin-top:8px">Vern planlegger å bruke Insurely som primær distribusjonskanal ved lansering.</div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title">FIDA – EU forsikringsdistribusjon</div>
-      <div style="font-size:15px;color:var(--ink-3);line-height:1.8">EUs Financial Data Access (FIDA)-regulering vil åpne forsikringsdata for tredjeparts distribusjon – analog til PSD2 for bank.
-        <div style="margin-top:10px;display:flex;flex-direction:column;gap:6px">
-          <div style="display:flex;gap:10px"><div style="width:55px;color:var(--blue);font-weight:500">2023</div><div>FIDA-forslag fremmet av EU-kommisjonen</div></div>
-          <div style="display:flex;gap:10px"><div style="width:55px;color:var(--blue);font-weight:500">2025</div><div>Forventet vedtak i EU-parlamentet</div></div>
-          <div style="display:flex;gap:10px"><div style="width:55px;color:var(--ink-4);font-weight:500">2027</div><div>Implementeringsfrist (estimat)</div></div>
-          <div style="display:flex;gap:10px"><div style="width:55px;color:var(--ink-4);font-weight:500">2028+</div><div>Full åpning av forsikringsmarkedet</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-title">Strukturelle trender</div>
-    <div class="g3" style="margin-bottom:0">
-      <div style="border:.5px solid var(--paper-3);border-radius:var(--r);padding:12px">
-        <div style="font-weight:500;margin-bottom:6px;color:var(--blue)">Digitalisering</div>
-        <div style="font-size:15px;color:var(--ink-4);line-height:1.7">Kundene forventer heldigital tegning og skademelding. De etablerte har legacy-systemer som bremser omstillingen. Gir åpning for digitale utfordrere.</div>
-      </div>
-      <div style="border:.5px solid var(--paper-3);border-radius:var(--r);padding:12px">
-        <div style="font-weight:500;margin-bottom:6px;color:var(--blue)">Prispress</div>
-        <div style="font-size:15px;color:var(--ink-4);line-height:1.7">Sammenligningsportaler øker pristransparens. FIDA vil akselerere dette – fordeler utfordrere med lave driftskostnader.</div>
-      </div>
-      <div style="border:.5px solid var(--paper-3);border-radius:var(--r);padding:12px">
-        <div style="font-weight:500;margin-bottom:6px;color:var(--blue)">Klimarisiko</div>
-        <div style="font-size:15px;color:var(--ink-4);line-height:1.7">Hyppigere ekstremvær øker boligskader. Carriers revurderer eksponering i visse regioner. Påvirker gjenforsikringspriser og carriers' vilje til å inngå MGA-avtaler.</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- BILFORSIKRING -->
-<div id="bilforsikring" class="page">
-  <div class="page-header">
-    <div class="page-title">Bilforsikring</div>
-    <div class="page-desc">Markedsstørrelse, premie, erstatning og bottom-up – SSB 11580 · Finans Norge · SSB Bilparken</div>
-  </div>
-  <div class="g4">
-    <div class="card"><div class="card-title">Forsikrede personbiler (Q3 2024)</div><div class="card-big" style="color:var(--blue)">2 877 321</div><div class="card-sub">Finans Norge · lovpålagt trafikkansvar</div></div>
-    <div class="card"><div class="card-title">Motor bestandspremie Q4 2024</div><div class="card-big" style="color:var(--blue)">35,5 mrd</div><div class="card-sub">NOK · trafikk + kasko · Finans Norge</div></div>
-    <div class="card"><div class="card-title">Snittpremie per kjøretøy 2024</div><div class="card-big">~11 500 NOK</div><div class="card-sub">SSB 11580 ÷ FN-antall · trafikk+kasko</div></div>
-    <div class="card"><div class="card-title">Byttefrekvens 2024</div><div class="card-big" style="color:var(--green)">25%</div><div class="card-sub">~720 000 bytter bilforsikring per år</div></div>
-  </div>
-  <div class="g2">
-    <div class="card">
-      <div class="card-title">Premieutvikling motor 2012–2024 <span style="font-size:15px;color:var(--ink-5);font-weight:400">SSB 11580 (mill. NOK)</span></div>
-      <div style="display:flex;gap:14px;margin-bottom:8px;font-size:15px;color:var(--ink-4)">
-        <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:2px;background:#c4440f"></div>Kasko (øvrig motor)</div>
-        <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:2px;background:var(--blue)"></div>Trafikk</div>
-      </div>
-      <div style="height:200px"><canvas id="c-bil-premie"></canvas></div>
-    </div>
-    <div class="card">
-      <div class="card-title">Erstatning motor 2012–2024 <span style="font-size:15px;color:var(--ink-5);font-weight:400">SSB 11580 (mill. NOK)</span></div>
-      <div style="display:flex;gap:14px;margin-bottom:8px;font-size:15px;color:var(--ink-4)">
-        <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:2px;background:#c4440f"></div>Kasko</div>
-        <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:2px;background:var(--blue)"></div>Trafikk</div>
-      </div>
-      <div style="height:200px"><canvas id="c-bil-erst"></canvas></div>
-      <div style="font-size:15px;color:var(--ink-5);margin-top:6px">Kasko-erstatning doblet seg fra 7,7 mrd (2012) til 19,5 mrd (2024). Rekordår 2023: 18,7 mrd.</div>
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-title">Loss ratio motor 2012–2024 – kasko vs. trafikk <span style="font-size:15px;color:var(--ink-5);font-weight:400">SSB 11580 · erstatning ÷ premie</span></div>
-    <div style="display:flex;gap:14px;margin-bottom:8px;font-size:15px;color:var(--ink-4)">
-      <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:2px;background:#c4440f"></div>Kasko</div>
-      <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:2px;background:var(--blue)"></div>Trafikk</div>
-    </div>
-    <div style="height:180px"><canvas id="c-bil-lr"></canvas></div>
-    <div class="danger" style="margin-top:8px;margin-bottom:0">Kasko 2023: 87,1% (18,7 mrd ÷ 21,5 mrd) – kritisk høyt for ny MGA. 2024: 79,0% (19,5 mrd ÷ 24,7 mrd) – bedring, men ustabilt. EV-skader og dyrt reservedelsmarked presser trenden.</div>
-  </div>
-  <div class="g2">
-    <div class="card">
-      <div class="card-title">Nøkkeltall bilskader 2024 <span style="font-size:15px;color:var(--ink-5);font-weight:400">Finans Norge årsstatistikk</span></div>
-      <div style="font-size:15px;color:var(--ink-3)">
-        <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:.5px solid var(--paper-2)"><span>Totalt antall bilskader</span><strong style="color:var(--red)">1 144 000 – rekord</strong></div>
-        <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:.5px solid var(--paper-2)"><span>Motorvognerstatninger totalt</span><strong>24,4 mrd NOK (+9,3%)</strong></div>
-        <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:.5px solid var(--paper-2)"><span>Gjennomsnittlig skadeutbetaling</span><strong>21 300 kr (opp fra 20 000)</strong></div>
-        <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:.5px solid var(--paper-2)"><span>Bilbranner 2024</span><strong>Rekord · +36% fra 2023</strong></div>
-        <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:.5px solid var(--paper-2)"><span>Premieøkning motorvogn 2025</span><strong>+20,5% (Finans Norge)</strong></div>
-        <div style="display:flex;justify-content:space-between;padding:5px 0"><span>EV-andel nye biler</span><strong>&gt;25% · batteribrann ny risikoklasse</strong></div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title">Bottom-up – Verns adresserbare bilmarked</div>
-      <div style="font-size:15px;color:var(--ink-3)">
-        <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:.5px solid var(--paper-2)"><span>Forsikrede personbiler</span><strong>~2 877 000</strong></div>
-        <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:.5px solid var(--paper-2)"><span>Byttefrekvens p.a.</span><strong style="color:var(--green)">25% = ~720 000 bytter/år</strong></div>
-        <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:.5px solid var(--paper-2)"><span>Snittpremie (trafikk+kasko)</span><strong>~11 500 NOK/år</strong></div>
-        <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:.5px solid var(--paper-2)"><span>— herav trafikk</span><strong>~3 850 NOK/år</strong></div>
-        <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:.5px solid var(--paper-2)"><span>— herav kasko</span><strong>~7 960 NOK/år</strong></div>
-        <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:.5px solid var(--paper-2)"><span>Verns venteliste (bil+bolig)</span><strong>32 400 NOK/år (+26% over snitt)</strong></div>
-        <div style="display:flex;justify-content:space-between;padding:5px 0"><span>Break-even kunder</span><strong>6 000 = 0,83% av byttepool</strong></div>
-      </div>
-      <div class="good" style="margin-top:10px;margin-bottom:0">Bil er Verns enkleste inngangsprodukt: lovpålagt forsikring, 25% byttefrekvens, stor byttepool (720k/år). Break-even krever 0,83% av de som uansett bytter.</div>
-    </div>
-  </div>
-</div>
-
-<!-- BOLIGFORSIKRING -->
-<div id="boligforsikring" class="page">
-  <div class="page-header">
-    <div class="page-title">Boligforsikring</div>
-    <div class="page-desc">Verns andre produkt. Norsk boligforsikringsmarked – størrelse, segmentering og Verns posisjonering.</div>
-  </div>
-  <div class="g4">
-    <div class="card"><div class="card-title">Selveiere 2024 (primærmarked)</div><div class="card-big" style="color:var(--blue)">1 621 866</div><div class="card-sub">Bygning + innbo · SSB 11081</div></div>
-    <div class="card"><div class="card-title">FN hjem/villa/hytte Q4 2024</div><div class="card-big" style="color:var(--blue)">18,1 mrd</div><div class="card-sub">NOK bestandspremie · +14% fra 2023</div></div>
-    <div class="card"><div class="card-title">Snittpremie selveier (bygning+innbo)</div><div class="card-big">~11 100 NOK</div><div class="card-sub">FN 18,1 mrd ÷ 1 622k selveiere</div></div>
-    <div class="card"><div class="card-title">Byttefrekvens bolig</div><div class="card-big" style="color:var(--amber)">~1–2%</div><div class="card-sub">~16–32k bytter per år · mye lavere enn bil</div></div>
-  </div>
-  <div class="g2">
-    <div class="card">
-      <div class="card-title">Premie brann/eiendom 2012–2024 <span style="font-size:15px;color:var(--ink-5);font-weight:400">SSB 11580 (mill. NOK)</span></div>
-      <div style="height:200px"><canvas id="c-bolig-premie"></canvas></div>
-      <div style="font-size:15px;color:var(--ink-5);margin-top:6px">SSB bransje 07 inkluderer næring. Privat hjem/villa/hytte (Finans Norge) = ~51% av bransje 07 i 2024.</div>
-    </div>
-    <div class="card">
-      <div class="card-title">Erstatning brann/eiendom 2012–2024 <span style="font-size:15px;color:var(--ink-5);font-weight:400">SSB 11580 (mill. NOK)</span></div>
-      <div style="height:200px"><canvas id="c-bolig-erst"></canvas></div>
-      <div style="font-size:15px;color:var(--ink-5);margin-top:6px">Rekordår 2023: 26,5 mrd erstatning. 2024: 27,9 mrd. Vannskader +50% og brannskader +30% siste 5 år.</div>
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-title">Loss ratio brann/eiendom 2012–2024 <span style="font-size:15px;color:var(--ink-5);font-weight:400">SSB 11580 · erstatning ÷ premie</span></div>
-    <div style="height:160px"><canvas id="c-bolig-lr"></canvas></div>
-    <div class="warn" style="margin-top:8px;margin-bottom:0">Bolig loss ratio er mer stabil enn kasko: historisk range 56–84%. 2023 rekordår (83,5%) pga. augustflommene. 2024: 78,0% – normalisering. Gunstigere enn kasko for MGA-forhandling med carrier.</div>
-  </div>
-  <div class="g2">
-    <div class="card">
-      <div class="card-title">Markedssegmentering <span style="font-size:15px;color:var(--ink-5);font-weight:400">SSB 11081 · 2024</span></div>
-      <div style="margin-bottom:10px">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px"><div style="font-size:15px;color:var(--blue);font-weight:500;width:200px">Selveiere – bygning+innbo</div><div style="flex:1;height:6px;background:var(--paper-2);border-radius:3px;overflow:hidden"><div style="width:100%;height:100%;background:var(--blue);border-radius:3px"></div></div><div style="font-size:15px;color:var(--blue);width:70px;text-align:right;font-weight:500">1 621 866</div></div>
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px"><div style="font-size:15px;color:var(--amber);width:200px">Andelseiere – kun innbo</div><div style="flex:1;height:6px;background:var(--paper-2);border-radius:3px;overflow:hidden"><div style="width:22%;height:100%;background:var(--amber-l);border-radius:3px"></div></div><div style="font-size:15px;color:var(--amber);width:70px;text-align:right">352 806</div></div>
-        <div style="display:flex;align-items:center;gap:8px"><div style="font-size:15px;color:var(--ink-4);width:200px">Leiere – kun innbo</div><div style="flex:1;height:6px;background:var(--paper-2);border-radius:3px;overflow:hidden"><div style="width:38%;height:100%;background:var(--paper-3);border-radius:3px"></div></div><div style="font-size:15px;color:var(--ink-5);width:70px;text-align:right">609 855</div></div>
-      </div>
-      <div style="font-size:15px;color:var(--ink-3)">
-        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:.5px solid var(--paper-2)"><span>LO-innboforsikring</span><strong style="color:var(--amber)">~40% av innbomarkedet blokkert</strong></div>
-        <div style="display:flex;justify-content:space-between;padding:4px 0"><span>Naturskadepool</span><strong>Obligatorisk – lik kostnad alle carriers</strong></div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title">Bottom-up – Verns adresserbare boligmarked</div>
-      <div style="font-size:15px;color:var(--ink-3)">
-        <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:.5px solid var(--paper-2)"><span>Selveiere (bygning+innbo)</span><strong>1 621 866</strong></div>
-        <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:.5px solid var(--paper-2)"><span>Byttefrekvens p.a.</span><strong>~1–2% = 16–32k bytter/år</strong></div>
-        <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:.5px solid var(--paper-2)"><span>Snittpremie selveier</span><strong>~11 100 NOK/år</strong></div>
-        <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:.5px solid var(--paper-2)"><span>Break-even boligkunder (isolert)</span><strong style="color:var(--red)">6 000 = 19–38% av årets bytter</strong></div>
-        <div style="display:flex;justify-content:space-between;padding:5px 0"><span>Strategisk posisjonering</span><strong>Kryssalg til bilkunder</strong></div>
-      </div>
-      <div class="warn" style="margin-top:10px;margin-bottom:0">Bolig som kryssalgsprodukt til bilkunder er riktig strategi: felles onboarding via BankID, én kundekontakt, høyere ARPU. Kombinert bil+bolig = ~22 600 NOK/år vs. Verns venteliste 32 400 NOK/år.</div>
-    </div>
-  </div>
-</div>
-
-<!-- CAP TABLE -->
-<div id="captable" class="page">
-  <div class="page-header">
-    <div class="page-title">Cap table</div>
-    <div class="page-desc">Eierstruktur og utvanning ved konvertering av konvertible lån. Konverteringskurs NOK 50–500 pr. aksje. Investorer tiltrer SHA via FAA (Form of Adherence Agreement) — gjeldsbrev med konkret beløp er separat dokument som må verifiseres før signering.</div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">Forutsetninger</div>
-    <div class="g2" style="margin-bottom:10px">
-      <div>
-        <div style="font-size:11px;color:var(--blue);margin-bottom:2px;font-weight:600;text-transform:uppercase;letter-spacing:.06em">Affectum AS</div>
-        <div style="font-size:10px;color:var(--ink-5);margin-bottom:6px">987 827 637</div>
-        <table style="font-size:14px">
-          <tr><td style="color:var(--ink-4);border:none;padding:3px 6px 3px 0">Lånebeløp</td><td style="border:none;padding:3px 0"><strong>1,5 mNOK</strong></td></tr>
-          <tr><td style="color:var(--ink-4);border:none;padding:3px 6px 3px 0">Andel av runden</td><td style="border:none;padding:3px 0">~22,2%</td></tr>
-        </table>
-      </div>
-      <div>
-        <div style="font-size:11px;color:var(--amber);margin-bottom:2px;font-weight:600;text-transform:uppercase;letter-spacing:.06em">Base Bedrift AS</div>
-        <div style="font-size:10px;color:var(--ink-5);margin-bottom:6px">998 625 084</div>
-        <table style="font-size:14px">
-          <tr><td style="color:var(--ink-4);border:none;padding:3px 6px 3px 0">Lånebeløp</td><td style="border:none;padding:3px 0"><strong>0,5 mNOK</strong></td></tr>
-          <tr><td style="color:var(--ink-4);border:none;padding:3px 6px 3px 0">Andel av runden</td><td style="border:none;padding:3px 0">~5,6%</td></tr>
-        </table>
-      </div>
-    </div>
-    <div style="border-top:.5px solid var(--paper-3);padding-top:10px">
-      <div style="font-size:11px;color:var(--ink-4);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.06em">Felles vilkår</div>
-      <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px;font-size:13px">
-        <div><div style="color:var(--ink-4);margin-bottom:2px" class="tip">Konv.kurs<span class="tip-icon" data-tip="Kursen lånet konverteres til aksjer ved. Minimum NOK 50, maksimum NOK 500 per aksje. Faktisk kurs fastsettes ved neste finansieringsrunde.">?</span></div><strong>NOK 50–500</strong></div>
-        <div><div style="color:var(--ink-4);margin-bottom:2px" class="tip">Rabatt neste runde<span class="tip-icon" data-tip="Investorene tegner aksjer til 20% lavere kurs enn øvrige investorer i neste finansieringsrunde. Aktiveres kun dersom konverteringskursen ellers ville vært høyere enn rabattert kurs.">?</span></div><strong>20%</strong></div>
-        <div><div style="color:var(--ink-4);margin-bottom:2px" class="tip">Verdivurd.tak<span class="tip-icon" data-tip="Valuation cap under forhandling. Juster slideren i Post-money-seksjonen nedenfor.">?</span></div><strong data-cap-display>50 mNOK</strong></div>
-        <div><div style="color:var(--ink-4);margin-bottom:2px" class="tip">Rente<span class="tip-icon" data-tip="Lånet er rentefritt. Merk: Skattemyndighetene kan beregne en sjablongmessig renteinntekt for norske långivere etter armlengdeprinsippet (sktl. §13-1).">?</span></div><strong>0%</strong></div>
-        <div><div style="color:var(--ink-4);margin-bottom:2px" class="tip">Løpetid<span class="tip-icon" data-tip="Seneste dato for konvertering. Dersom konvertering ikke har skjedd innen 2031, konverteres lånet automatisk til NOK 500 per aksje (maksimalkursen).">?</span></div><strong>t.o.m. 2031</strong></div>
-        <div><div style="color:var(--ink-4);margin-bottom:2px" class="tip">Opsjonspott<span class="tip-icon" data-tip="SHA §6 tillater et insentivprogram på inntil 10% av aksjene (post-dilution). Utvanningseffekten av opsjonspotten er ikke inkludert i disse beregningene.">?</span></div><strong>Maks 10%</strong></div>
-      </div>
-    </div>
-    <div style="border-top:.5px solid var(--paper-3);padding-top:10px;margin-top:10px">
-      <div style="font-size:11px;color:var(--ink-4);margin-bottom:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em">Post-money verdivurdering</div>
-      <div style="display:flex;gap:24px;align-items:flex-end;flex-wrap:wrap;margin-bottom:12px">
-        <div>
-          <label style="font-size:13px;color:var(--ink-4);display:block;margin-bottom:4px" class="tip">Pre-money (verdivurd.tak)<span class="tip-icon" data-tip="Valuation cap under forhandling. Endring her oppdaterer cap table, post-money, scenariomatrise og IRR/MOIC. NOK 50 mNOK er nåværende forhandlingsposisjon.">?</span></label>
-          <div style="display:flex;align-items:center;gap:8px">
-            <input type="range" id="cap-slider" min="10" max="100" step="5" value="50"
-              style="width:160px;accent-color:var(--blue)" oninput="oppdaterPostMoney()">
-            <span style="font-size:14px;font-weight:600;color:var(--blue)"><span id="cap-verdi">50</span> mNOK</span>
-          </div>
-        </div>
-        <div>
-          <label style="font-size:13px;color:var(--ink-4);display:block;margin-bottom:4px">Ny kapital inn (seed):</label>
-          <div style="display:flex;align-items:center;gap:8px">
-            <input type="range" id="seed-slider" min="2" max="9" step="0.25" value="9"
-              style="width:160px;accent-color:var(--blue)" oninput="oppdaterPostMoney()">
-            <span style="font-size:14px;font-weight:600;color:var(--blue)"><span id="seed-verdi">9</span> mNOK</span>
-          </div>
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;font-size:13px">
-        <div><div style="color:var(--ink-4);margin-bottom:2px" class="tip">Pre-money (tak)<span class="tip-icon" data-tip="Valuation cap: maksimal verdivurdering som legges til grunn ved konvertering. Under forhandling — juster slideren for å simulere ulike utfall.">?</span></div><strong id="pm-cap-verdi" style="color:var(--blue)">50 mNOK</strong></div>
-        <div><div style="color:var(--ink-4);margin-bottom:2px" class="tip">Ny kapital inn<span class="tip-icon" data-tip="Kapital som skytes inn i seed-runden. Juster slideren for å se effekten på post-money verdivurdering og øvrige investorers andel.">?</span></div><strong id="pm-kapital-inn" style="color:var(--blue)">9 mNOK</strong></div>
-        <div><div style="color:var(--ink-4);margin-bottom:2px" class="tip">Post-money (full runde)<span class="tip-icon" data-tip="Pre-money (tak) + total kapital inn fra hele seed-runden.">?</span></div><strong id="pm-full" style="color:var(--blue)">59 mNOK</strong></div>
-        <div><div style="color:var(--ink-4);margin-bottom:2px" class="tip">Post-money (de to)<span class="tip-icon" data-tip="Pre-money (tak) + kapitalen fra de to navngitte investorene (2,0 mNOK). Brukes som grunnlag for post-money verdi i cap table.">?</span></div><strong id="pm-tre-inv" style="color:var(--blue)">52,0 mNOK</strong></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">Konverteringsscenario – Affectum AS · Base Bedrift AS</div>
-    <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:16px">
-      <div style="display:flex;align-items:center;gap:10px">
-        <label style="font-size:15px;color:var(--ink-4)">Konverteringskurs:</label>
-        <input type="range" id="kurs-slider" min="50" max="500" step="10" value="200"
-          style="width:180px;accent-color:var(--blue)" oninput="oppdaterCaptable()">
-        <span style="font-size:15px;font-weight:600;color:var(--blue);min-width:36px">NOK <span id="kurs-verdi">200</span></span>
-      </div>
-      <div style="display:flex;align-items:center;gap:8px">
-        <input type="checkbox" id="rabatt-check" style="accent-color:var(--blue)" onchange="oppdaterCaptable()" checked>
-        <label style="font-size:15px;color:var(--ink-4)">Bruk 20% rabatt (neste runde)</label>
-      </div>
-    </div>
-    <div id="captable-results"></div>
-  </div>
-
-  <div class="g2">
-    <div class="card">
-      <div class="card-title">Eierstruktur post-konvertering (Affectum + Base + gründere)</div>
-      <div style="height:240px"><canvas id="c-captable-pie"></canvas></div>
-    </div>
-    <div class="card">
-      <div class="card-title">Eierandel per investor – alle konverteringskurser</div>
-      <div style="height:240px"><canvas id="c-captable-line"></canvas></div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">Scenariomatrise – Affectum AS og Base Bedrift AS ved konverteringskurs NOK 50 til NOK 500</div>
-    <div style="overflow-x:auto">
-    <table id="scenario-tabell">
-      <tr>
-        <th>Kurs (NOK)</th>
-        <th class="tip">Eff. kurs m/rabatt<span class="tip-icon" data-tip="Effektiv konverteringskurs etter 20% rabatt. Aktiveres ved konvertering i neste finansieringsrunde.">?</span></th>
-        <th style="color:var(--blue)" class="tip">Affectum aksjer<span class="tip-icon" data-tip="Nye aksjer Affectum AS (1,5 mNOK) mottar. Beregnet som lånebeløp ÷ kurs.">?</span></th>
-        <th style="color:var(--blue)" class="tip">Affectum andel<span class="tip-icon" data-tip="Affectums isolerte andel mot gründerne (uten øvrige investorer). Post full konvertering er andelen lavere.">?</span></th>
-
-        <th style="color:var(--amber)" class="tip">Base aksjer<span class="tip-icon" data-tip="Nye aksjer Base Bedrift AS (0,5 mNOK) mottar.">?</span></th>
-        <th style="color:var(--amber)" class="tip">Base andel<span class="tip-icon" data-tip="Base Bedrift AS sin isolerte andel mot gründerne.">?</span></th>
-        <th class="tip">Impl. verdi ⓘ<span class="tip-icon" data-tip="Implisitt selskapverdi basert på Affectums andel. Ved kurs over NOK 400 overstiger denne 50 mNOK – konverteringen skjer likevel til maks NOK 500.">?</span></th>
-      </tr>
-    </table>
-    </div>
-    <div style="font-size:12px;color:var(--ink-5);margin-top:8px;padding-top:6px;border-top:.5px solid var(--paper-2)">Andeler er isolert mot gründerne (100 000 grunnlagsaksjer). Post full seed-konvertering er alle andeler lavere – se cap table nedenfor.</div>
-  </div>
-
-  <div class="warn"><strong>Viktig:</strong> Scenarioboksene og matrisen viser isolert andel mot gründerne. Den faktiske andelen etter at begge investorer konverterer er lavere — se cap table nedenfor for reelle andeler.</div>
-
-  <div class="card">
-    <div class="card-title">Cap table – hele seed-runden konverterer (NOK 200/aksje, ingen rabatt)</div>
-    <table>
-      <tr>
-        <th>Aksjonær</th>
-        <th>Aksjer pre-seed</th>
-        <th class="tip">Nye aksjer (konv.)<span class="tip-icon" data-tip="Antall nye aksjer investor mottar ved konvertering. Beregnet som lånebeløp ÷ konverteringskurs (NOK 200, ingen rabatt).">?</span></th>
-        <th>Totalt</th>
-        <th class="tip">Andel %<span class="tip-icon" data-tip="Eierandel etter at hele seed-runden (se slider) er konvertert. Inkluderer alle investorer og øvrige seed-deltakere.">?</span></th>
-        <th class="tip">Post-money verdi<span class="tip-icon" data-tip="Aksjonærens andel × post-money verdivurdering (50 mNOK pre-money + 2,0 mNOK fra de to investorene = 52,0 mNOK). Ikke realisert verdi – kun implisitt ved taket.">?</span></th>
-      </tr>
-      <tr><td>Christer Dalsbøe</td><td>50 000</td><td>–</td><td>50 000</td><td id="cd-andel">–</td><td id="cd-pm">–</td></tr>
-      <tr><td>Jacob Mørch</td><td>50 000</td><td>–</td><td>50 000</td><td id="jm-andel">–</td><td id="jm-pm">–</td></tr>
-      <tr><td>Affectum AS</td><td>–</td><td id="affectum-aksjer">–</td><td id="affectum-tot">–</td><td id="affectum-andel">–</td><td id="affectum-pm">–</td></tr>
-
-      <tr><td>Base Bedrift AS</td><td>–</td><td id="base-aksjer">–</td><td id="base-tot">–</td><td id="base-andel">–</td><td id="base-pm">–</td></tr>
-      <tr><td>Øvrige investorer (seed)</td><td>–</td><td id="ovrige-aksjer">–</td><td id="ovrige-tot">–</td><td id="ovrige-andel">–</td><td id="ovrige-pm">–</td></tr>
-      <tr style="font-weight:600;background:var(--paper-2)"><td>Totalt</td><td>100 000</td><td id="nye-tot">–</td><td id="grand-tot">–</td><td>100%</td><td id="total-pm" style="color:var(--blue)">–</td></tr>
-    </table>
-    <div style="font-size:13px;color:var(--ink-5);margin-top:8px">* Grunnlagsaksjer: 100 000 (estimert). Post-money verdi beregnet på pre-money tak (50 mNOK) + innbetalt kapital fra de to investorene (2,0 mNOK) = 52,0 mNOK.</div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">Serie A – utvanningsmodell</div>
-    <div style="display:flex;gap:24px;align-items:flex-end;flex-wrap:wrap;margin-bottom:16px">
-      <div>
-        <div style="font-size:12px;color:var(--ink-4);margin-bottom:5px" class="tip">Serie A pre-money verdsettelse<span class="tip-icon" data-tip="Verdsettelse av selskapet FØR Serie A-kapital skytes inn. Jo høyere pre-money, jo lavere utvanning for eksisterende aksjonærer. Drag-along-terskel i SHA er NOK 75 mNOK.">?</span></div>
-        <div style="display:flex;align-items:center;gap:10px">
-          <input type="range" id="serieA-pre" min="50" max="300" step="5" value="100"
-            style="width:180px;accent-color:var(--blue)" oninput="oppdaterSerieA()">
-          <span style="font-size:14px;font-weight:600;color:var(--blue)"><span id="serieA-pre-verdi">100</span> mNOK</span>
-        </div>
-      </div>
-      <div>
-        <div style="font-size:12px;color:var(--ink-4);margin-bottom:5px" class="tip">Ny kapital inn (Serie A)<span class="tip-icon" data-tip="Kapital som skytes inn i Serie A-runden. Øker post-money verdivurdering og antall nye aksjer, noe som utvanner alle eksisterende aksjonærer.">?</span></div>
-        <div style="display:flex;align-items:center;gap:10px">
-          <input type="range" id="serieA-kapital" min="10" max="100" step="5" value="30"
-            style="width:180px;accent-color:var(--blue)" oninput="oppdaterSerieA()">
-          <span style="font-size:14px;font-weight:600;color:var(--blue)"><span id="serieA-kapital-verdi">30</span> mNOK</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="g4" style="margin-bottom:14px">
-      <div style="background:var(--blue-ll);border:.5px solid var(--blue-l);border-radius:var(--r);padding:12px">
-        <div style="font-size:11px;color:var(--blue);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Post-money Serie A</div>
-        <div style="font-size:22px;font-weight:600;color:var(--blue)" id="serieA-postmoney">130 mNOK</div>
-        <div style="font-size:11px;color:var(--ink-4)">pre-money + ny kapital</div>
-      </div>
-      <div style="background:var(--paper);border:.5px solid var(--paper-3);border-radius:var(--r);padding:12px">
-        <div style="font-size:11px;color:var(--ink-4);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Serie A-investorers andel</div>
-        <div style="font-size:22px;font-weight:600;color:var(--ink)" id="serieA-investorandel">23,1%</div>
-        <div style="font-size:11px;color:var(--ink-4)">ny kapital ÷ post-money</div>
-      </div>
-      <div style="background:var(--amber-ll);border:.5px solid var(--amber-l);border-radius:var(--r);padding:12px">
-        <div style="font-size:11px;color:var(--amber);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Konverteringskurs seed</div>
-        <div style="font-size:22px;font-weight:600;color:var(--amber)" id="serieA-konvkurs">–</div>
-        <div style="font-size:11px;color:var(--ink-4)">cap/rabatt-justert</div>
-      </div>
-      <div style="background:var(--green-ll);border:.5px solid var(--green-l);border-radius:var(--r);padding:12px">
-        <div style="font-size:11px;color:var(--green);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Verdi per seed-aksje</div>
-        <div style="font-size:22px;font-weight:600;color:var(--green)" id="serieA-aksjeverd">–</div>
-        <div style="font-size:11px;color:var(--ink-4)">ved Serie A-kurs</div>
-      </div>
-    </div>
-
-    <table id="serieA-tabell">
-      <tr>
-        <th>Aksjonær</th>
-        <th class="tip">Andel etter seed %<span class="tip-icon" data-tip="Eierandel etter at hele seed-runden er konvertert (ved NOK 200/aksje, ingen rabatt). Utgangspunkt for Serie A-beregningen.">?</span></th>
-        <th class="tip">Andel etter Serie A %<span class="tip-icon" data-tip="Eierandel etter at Serie A-investorer har tegnet nye aksjer. Alle eksisterende aksjonærer utvanner proporsjonalt.">?</span></th>
-        <th class="tip">Verdi ved Serie A post-money<span class="tip-icon" data-tip="Aksjonærens andel × Serie A post-money verdivurdering. Indikerer implisitt markedsverdi – ikke realisert verdi.">?</span></th>
-      </tr>
-    </table>
-    <div style="font-size:12px;color:var(--ink-5);margin-top:8px;padding-top:6px;border-top:.5px solid var(--paper-2)">Seed-investorer konverterer til effektiv kurs = min(cap-kurs, Serie A-kurs × 0,80). Cap-kurs = 50 mNOK pre-money ÷ 100 000 grunnlagsaksjer. Opsjonspott (10%) ikke inkludert.</div>
-  </div>
-</div>
-
-<!-- REGULERING -->
-<div id="regulering" class="page">
-  <div class="page-header">
-    <div class="page-title">Regulatorisk landskap</div>
-    <div class="page-desc">MGA-modellen gir lavere regulatorisk byrde enn full forsikringslisens. Distribusjon via Insurely håndterer IDD-kravene.</div>
-  </div>
-  <div class="g2">
+  </div></div>
+<div id="busin-reg" class="ptab-pane"><div class="g2">
     <div class="card">
       <div class="card-title">MGA vs. forsikringsselskap – regulatorisk sammenligning</div>
       <table>
@@ -1155,16 +625,8 @@ th.tip > span.tip-icon{vertical-align:middle}
       </table>
     </div>
   </div>
-  <div class="note"><strong>Konklusjon:</strong> MGA-modellen er regulatorisk gjennomførbar og betydelig enklere enn full forsikringsvirksomhet. Den kritiske regulatoriske inngangsporten er MGA-avtalen med carrier – uten den kan Vern ikke tegne forsikringer.</div>
-</div>
-
-<!-- RISIKOER -->
-<div id="risiko" class="page">
-  <div class="page-header">
-    <div class="page-title">Risikoer</div>
-    <div class="page-desc">Identifiserte risikoer ved investering i Mambus AB / Vern gjennom konvertible lån fra Affectum AS og Base Bedrift AS.</div>
-  </div>
-  <div class="card">
+  <div class="note"><strong>Konklusjon:</strong> MGA-modellen er regulatorisk gjennomførbar og betydelig enklere enn full forsikringsvirksomhet. Den kritiske regulatoriske inngangsporten er MGA-avtalen med carrier – uten den kan Vern ikke tegne forsikringer.</div></div>
+<div id="busin-risk" class="ptab-pane"><div class="card">
     <table>
       <tr><th>Risiko</th><th>Alvorlighet</th><th>Beskrivelse</th><th>Mitigerende faktorer</th></tr>
       <tr>
@@ -1213,7 +675,7 @@ th.tip > span.tip-icon{vertical-align:middle}
         <td><strong>Manglende gjeldsbrev</strong></td>
         <td><span class="badge badge-red">Kritisk – verifiser</span></td>
         <td>Utfylt gjeldsbrev med investors navn og lånebeløp (1,5 mNOK) er ikke bekreftet mottatt. FAA-malen i SHA angir ikke beløp – dette fastsettes kun i selve gjeldsbrevet.</td>
-        <td>Krev utfylt og signert gjeldsbrev med ditt navn, beløp og resulterende eierandel FØR FAA signeres.</td>
+        <td>Affectum AS: FAA signert 14.04.26 — gjeldsbrev bør verifiseres nå. Base Bedrift AS: krev gjeldsbrev FØR FAA signeres.</td>
       </tr>
       <tr>
         <td><strong>Investors stemmerett avgitt</strong></td>
@@ -1250,16 +712,62 @@ th.tip > span.tip-icon{vertical-align:middle}
       <div class="card-title">Habilitetsrisiko (asl. §6-27)</div>
       <div class="warn" style="margin-bottom:0">Halvard bør <strong>ikke delta i styrevedtak</strong> i Affectum AS som angår investeringen i Mambus AB, siden dette gjelder hans sønn. Habilitetsreglene etter asl. §6-27 gjelder styremedlemmer. Protokollfør habilitetsvurderingen eksplisitt.</div>
     </div>
+  </div></div>
+<div id="busin-dyn" class="ptab-pane"><div class="g2">
+    <div class="card">
+      <div class="card-title">Insurely – distribusjonsplattform</div>
+      <div style="font-size:15px;color:var(--ink-3);line-height:1.8">Insurely er en nordisk InsurTech-plattform som kobler forsikringsselskaper med digitale distribusjonskanaler. Plattformen tilbyr:
+        <ul style="margin:8px 0 0 16px">
+          <li>API-integrasjon mot biler, bolig og andre forsikringsobjekter</li>
+          <li>White-label distribusjon via banker, bilforhandlere og andre partnere</li>
+          <li>Tjenester i Norge, Sverige, Danmark og Finland</li>
+        </ul>
+        <div style="margin-top:8px">Vern planlegger å bruke Insurely som primær distribusjonskanal ved lansering.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">FIDA – EU forsikringsdistribusjon</div>
+      <div style="font-size:15px;color:var(--ink-3);line-height:1.8">EUs Financial Data Access (FIDA)-regulering vil åpne forsikringsdata for tredjeparts distribusjon – analog til PSD2 for bank.
+        <div style="margin-top:10px;display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;gap:10px"><div style="width:55px;color:var(--blue);font-weight:500">2023</div><div>FIDA-forslag fremmet av EU-kommisjonen</div></div>
+          <div style="display:flex;gap:10px"><div style="width:55px;color:var(--blue);font-weight:500">2025</div><div>Forventet vedtak i EU-parlamentet</div></div>
+          <div style="display:flex;gap:10px"><div style="width:55px;color:var(--ink-4);font-weight:500">2027</div><div>Implementeringsfrist (estimat)</div></div>
+          <div style="display:flex;gap:10px"><div style="width:55px;color:var(--ink-4);font-weight:500">2028+</div><div>Full åpning av forsikringsmarkedet</div></div>
+        </div>
+      </div>
+    </div>
   </div>
+  <div class="card">
+    <div class="card-title">Strukturelle trender</div>
+    <div class="g3" style="margin-bottom:0">
+      <div style="border:.5px solid var(--paper-3);border-radius:var(--r);padding:12px">
+        <div style="font-weight:500;margin-bottom:6px;color:var(--blue)">Digitalisering</div>
+        <div style="font-size:15px;color:var(--ink-4);line-height:1.7">Kundene forventer heldigital tegning og skademelding. De etablerte har legacy-systemer som bremser omstillingen. Gir åpning for digitale utfordrere.</div>
+      </div>
+      <div style="border:.5px solid var(--paper-3);border-radius:var(--r);padding:12px">
+        <div style="font-weight:500;margin-bottom:6px;color:var(--blue)">Prispress</div>
+        <div style="font-size:15px;color:var(--ink-4);line-height:1.7">Sammenligningsportaler øker pristransparens. FIDA vil akselerere dette – fordeler utfordrere med lave driftskostnader.</div>
+      </div>
+      <div style="border:.5px solid var(--paper-3);border-radius:var(--r);padding:12px">
+        <div style="font-weight:500;margin-bottom:6px;color:var(--blue)">Klimarisiko</div>
+        <div style="font-size:15px;color:var(--ink-4);line-height:1.7">Hyppigere ekstremvær øker boligskader. Carriers revurderer eksponering i visse regioner. Påvirker gjenforsikringspriser og carriers' vilje til å inngå MGA-avtaler.</div>
+      </div>
+    </div>
+  </div></div>
 </div>
 
-<!-- SKATT -->
-<div id="skatt" class="page">
+<div id="vurdering" class="page">
   <div class="page-header">
-    <div class="page-title">Skattemessige problemstillinger</div>
-    <div class="page-desc">Syv identifiserte skattemessige problemstillinger fordelt på tre parter.</div>
+    <div class="page-title">Vurdering</div>
+    <div class="page-desc">Skatt, Startuplab, engelinvestorvurdering og kommunikasjonslogg.</div>
   </div>
-  <div class="note"><strong>Merk – jurisdiksjon:</strong> Mambus AB er et svensk aksjeselskap (AB). Investering fra norske selskaper i svenske selskaper faller ifølge Jacob Mørch (feb.-epost) innunder <strong>fritaksmetoden</strong> for nordiske investorer. Dette gjelder imidlertid aksjer – ikke fordringer. Konvertering fra fordring (lån) til aksje er fortsatt skattepliktig realisasjon for norske AS, jf. Rt. 2011-1620. Avklar endelig skatteposisjon med norsk skatterådgiver.</div>
+  <div class="ptab-bar">
+    <button class="ptab on" onclick="ptab('vurde','skatt',this)">Skatt</button>
+    <button class="ptab" onclick="ptab('vurde','sl',this)">Startuplab</button>
+    <button class="ptab" onclick="ptab('vurde','eng',this)">Engelinvestorvurdering</button>
+    <button class="ptab" onclick="ptab('vurde','komm',this)">Kommunikasjonslogg</button>
+  </div>
+  <div id="vurde-skatt" class="ptab-pane on"><div class="note"><strong>Merk – jurisdiksjon:</strong> Mambus AB er et svensk aksjeselskap (AB). Investering fra norske selskaper i svenske selskaper faller ifølge Jacob Mørch (feb.-epost) innunder <strong>fritaksmetoden</strong> for nordiske investorer. Dette gjelder imidlertid aksjer – ikke fordringer. Konvertering fra fordring (lån) til aksje er fortsatt skattepliktig realisasjon for norske AS, jf. Rt. 2011-1620. Avklar endelig skatteposisjon med norsk skatterådgiver.</div>
   <div class="danger"><strong>Ansvarsfraskrivelse:</strong> Dette er et juridisk-faglig arbeidsnotat, ikke skatterådgivning. Alle skatteforhold bør verifiseres av en norsk skatterådgiver med erfaring fra nærstående-transaksjoner.</div>
   <div class="card">
     <div class="card-title" style="color:var(--blue)">Affectum AS (nærstående)</div>
@@ -1268,7 +776,7 @@ th.tip > span.tip-icon{vertical-align:middle}
       <tr><td>1</td><td><strong>Habilitet</strong></td><td>asl. §6-27</td><td>Lav – formell</td><td>Protokollfør habilitetsvurdering. Halvard bør ikke stemme i styret for denne investeringen.</td></tr>
       <tr><td>2</td><td><strong>Armlengde – rentefritt lån</strong></td><td>sktl. §13-1</td><td>Moderat</td><td>Vurder markedsrente. Alternativt: dokumenter at 0% er kommersielt begrunnet.</td></tr>
       <tr><td>3</td><td><strong>Sjablongrenteinntekt</strong></td><td>sktl. §13-1</td><td>Moderat</td><td>Dokumenter armlengde-begrunnelse. Markedsrente på risikolån: 5–8%.</td></tr>
-      <tr><td>4</td><td><strong>Realisasjon ved konvertering</strong></td><td>Rt. 2011-1620, Rt. 2014-882</td><td><span class="badge badge-red">Høy – likviditetsfelle</span></td><td>Skatt forfaller uten kontantoppgjør. Avklar med skatterådgiver FØR signering.</td></tr>
+      <tr><td>4</td><td><strong>Realisasjon ved konvertering</strong></td><td>Rt. 2011-1620, Rt. 2014-882</td><td><span class="badge badge-red">Høy – likviditetsfelle</span></td><td>Skatt forfaller uten kontantoppgjør. Avklar med skatterådgiver — Affectum AS har signert, problemstillingen er nå akutt.</td></tr>
       <tr><td>5</td><td><strong>Tapsfradrag ved mislighold</strong></td><td>sktl. §6-2 tredje ledd</td><td>Høy</td><td>Tap på fordringer til nærstående er begrenset. Dokumenter forretningsmessig begrunnelse grundig.</td></tr>
     </table>
   </div>
@@ -1288,16 +796,8 @@ th.tip > span.tip-icon{vertical-align:middle}
       <div style="border:.5px solid var(--paper-3);border-radius:var(--r);padding:12px"><div style="font-weight:500;margin-bottom:4px">Rt. 1999-1087 (Baker Hughes)</div><div style="font-size:15px;color:var(--ink-4);line-height:1.7">Armlengdeprinsippets rekkevidde ved nærstående-transaksjoner. Skattemyndighetene kan fastsette inntekt basert på markedsvilkår.</div></div>
       <div style="border:.5px solid var(--paper-3);border-radius:var(--r);padding:12px"><div style="font-weight:500;margin-bottom:4px">Rt. 1990-958 (Quatro-dommen)</div><div style="font-size:15px;color:var(--ink-4);line-height:1.7">Tapsfradrag på fordringer mellom nærstående – forretningsmessig begrunnelse er avgjørende for fradragsrett.</div></div>
     </div>
-  </div>
-</div>
-
-<!-- STARTUPLAB -->
-<div id="startuplab" class="page">
-  <div class="page-header">
-    <div class="page-title">Startuplab-vurdering</div>
-    <div class="page-desc">Startuplab er Norges ledende pre-seed akselerator. Deres kriterier og typiske skepsis er relevant referanseramme for vurdering av Vern.</div>
-  </div>
-  <div class="g2">
+  </div></div>
+<div id="vurde-sl" class="ptab-pane"><div class="g2">
     <div class="card">
       <div class="card-title">Startuplab – fondsprofil</div>
       <table>
@@ -1338,17 +838,8 @@ th.tip > span.tip-icon{vertical-align:middle}
       <div class="card-title">Hva som taler for Vern likevel</div>
       <div class="good" style="margin-bottom:0">Forsikring er en bransje med ekstremt lav tech-inntrengning historisk. Timing er god: Insurely er etablert, FIDA er på vei, og nordisk forsikring er lønnsomhetsdrevet – ikke innovasjonsdrevet. Founders med bransjeerfaring er det Startuplab ønsker.</div>
     </div>
-  </div>
-</div>
-
-<!-- ENGELINVESTORVURDERING -->
-<div id="engelinvestor" class="page">
-  <div class="page-header">
-    <div class="page-title">Engelinvestorvurdering</div>
-    <div class="page-desc">Strukturen vurdert opp mot bransjestandarder for pre-seed engelinvesteringer i Norden. Sammenligning med SAFE-konvensjoner, nordiske akseleratorer og referansecase.</div>
-  </div>
-
-  <div class="g4">
+  </div></div>
+<div id="vurde-eng" class="ptab-pane"><div class="g4">
     <div class="card"><div class="card-title">Valuation cap</div><div class="card-big" style="color:var(--amber)">50 mNOK</div><div class="card-sub">Nordisk pre-seed standard: 10–30 mNOK</div></div>
     <div class="card"><div class="card-title">Rabatt</div><div class="card-big" style="color:var(--green)">20%</div><div class="card-sub">Bransjekurant — verken over eller under</div></div>
     <div class="card"><div class="card-title">Rente</div><div class="card-big" style="color:var(--green)">0%</div><div class="card-sub">Standard for pre-seed i Skandinavia</div></div>
@@ -1379,7 +870,7 @@ th.tip > span.tip-icon{vertical-align:middle}
         <div><span class="badge badge-red">✗</span> &nbsp;Subordinert gjeld — ikke egenkapital. Investor er kreditor, ikke aksjonær, frem til konvertering</div>
         <div><span class="badge badge-red">✗</span> &nbsp;SHA §5.5: Investor avgir stemmerett — forpliktet til å støtte alle styreforslag på generalforsamling</div>
         <div><span class="badge badge-red">✗</span> &nbsp;FAA inkluderer personlig garanti fra eier av investorselskapet (enkel borgen, §§ 9,14,15,16,17,20,21,29)</div>
-        <div><span class="badge badge-amber">△</span> &nbsp;Investorer identifiseres ikke i SHA — kun via FAA. Gjeldsbrevet (med konkret beløp) er separat dokument som må verifiseres</div>
+        <div><span class="badge badge-amber">△</span> &nbsp;Investorer identifiseres ikke i SHA — kun via FAA. Gjeldsbrev (med konkret beløp) avventes for begge investorer — fastsetter lånebeløp og eierandel</div>
       </div>
     </div>
   </div>
@@ -1500,7 +991,7 @@ th.tip > span.tip-icon{vertical-align:middle}
       <tr>
         <td><strong>Konvertibelt gjeldsbrev (utfylt)</strong></td>
         <td><span class="badge badge-red">Ikke bekreftet</span></td>
-        <td>Kun mal mottatt. Gjeldsbrev for Affectum AS (1,5 mNOK) og Base Bedrift AS (0,5 mNOK) med investorenes navn og resulterende eierandel må foreligge og verifiseres FØR signering av FAA. Likelydende vilkår bekreftet.</td>
+        <td>Affectum AS: FAA signert 14.04.26 — gjeldsbrev bør nå innhentes og verifiseres. Base Bedrift AS: gjeldsbrev og FAA avventes. Likelydende vilkår bekreftet i e-post.</td>
       </tr>
       <tr>
         <td><strong>Konvertibelbetingelser (Appendix 1A)</strong></td>
@@ -1510,7 +1001,7 @@ th.tip > span.tip-icon{vertical-align:middle}
       <tr>
         <td><strong>FAA (Form of Adherence Agreement)</strong></td>
         <td><span class="badge badge-amber">Til signering</span></td>
-        <td>Signaturforespørsel sendt via Dropbox Sign 14. april 2026 av Jacob Mørch (<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="771d1a3701120519111805041e1c051e1910591918">[email&#160;protected]</a>). Melding: «Se aksjonæravtale for signering. Velkommen til Vern!». Merk: FAA inkluderer personlig garanti (enkel borgen) fra eier av investorselskap for §§ 9,14,15,16,17,20,21,29 i SHA.</td>
+        <td><strong>Affectum AS:</strong> FAA signert 14.04.2026 kl. 17:36 UTC av Halvard Nordang (halvard@areal.as) via Dropbox Sign. Audit trail bekreftet. <strong>Base Bedrift AS:</strong> FAA avventes. Merk: FAA inkluderer personlig garanti (enkel borgen) fra eier for §§ 9, 14, 15, 16, 17, 20, 21, 29 i SHA.</td>
       </tr>
       <tr>
         <td><strong>Cap table (nåværende eierstruktur)</strong></td>
@@ -1524,54 +1015,44 @@ th.tip > span.tip-icon{vertical-align:middle}
       </tr>
     </table>
     <div class="warn" style="margin-top:12px;margin-bottom:0">
-      <strong>Anbefaling før signering:</strong> (1) Krev utfylt gjeldsbrev med ditt navn og 1,5 mNOK. (2) Krev komplett cap table med alle eksisterende investorer. (3) Bekreft total emisjonsstørrelse — maks NOK 9 mill., men hvor mye er tegnet av andre? (4) Få personlig garantieksponering (FAA §Undertaking) vurdert av advokat.
+      <strong>Status etter signering (Affectum AS):</strong> FAA signert 14.04.26. Gjenstående åpne punkt: (1) Innhent og verifiser gjeldsbrev med ditt navn og 1,5 mNOK. (2) Krev komplett cap table. (3) Bekreft total emisjonsstørrelse. (4) Skatterådgiver bør vurdere konverteringsskatt og nærstående-eksponering. <br><strong>Base Bedrift AS:</strong> FAA og gjeldsbrev avventes.
     </div>
-  </div>
-</div>
-
-
-<!-- INVESTORKOMMUNIKASJON -->
-<div id="investorkomm" class="page">
-  <div class="page-header">
-    <div class="page-title">Investorkommunikasjon</div>
-    <div class="page-desc">Oppsummering av kommunikasjonen mellom Vern/Jacob Mørch og Halvard Nordang (Affectum AS) basert på e-poster i perioden desember 2025 – april 2026.</div>
-  </div>
-
-  <div class="card">
+  </div></div>
+<div id="vurde-komm" class="ptab-pane"><div class="card">
     <div class="card-title">Kommunikasjonslogg</div>
     <table>
       <tr><th>Dato</th><th>Fra</th><th>Kanal</th><th>Innhold</th><th>Merknad</th></tr>
       <tr>
         <td>15. des. 2025</td>
-        <td>Jacob Mørch (<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="fb919a989499bb8e8994969a909e89d59594">[email&#160;protected]</a>)</td>
+        <td>Jacob Mørch (jacob@uromaker.no)</td>
         <td>E-post</td>
         <td>Månedlig investor-update. Statusoppdatering: 200+ leads, Eir-dialog startet, POC bygget, committed kapital. Sveitsisk morselskap planlagt etter nyttår.</td>
         <td><span class="badge badge-blue">Update</span></td>
       </tr>
       <tr>
         <td>2. feb. 2026</td>
-        <td>Jacob Mørch (<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a8c2c5e8decddac6cec7dadbc1c3dac1c6cf86c6c7">[email&#160;protected]</a>)</td>
+        <td>Jacob Mørch (jm@vernforsikring.no)</td>
         <td>E-post</td>
         <td>Månedlig update: Jurisdiksjonsskifte Sveits → Sverige. Instrument: WISE (svensk SAFE). Selskapsstruktur under etablering. Carrier-dialog Eir intensiv. V1 kjøpsløp under utvikling.</td>
         <td><span class="badge badge-blue">Update</span></td>
       </tr>
       <tr>
         <td>5. feb. 2026</td>
-        <td>Halvard Nordang (<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="83ebe2eff5e2f1e7c3e2f1e6e2efade2f0">[email&#160;protected]</a>)</td>
+        <td>Halvard Nordang (halvard@areal.as)</td>
         <td>E-post svar</td>
         <td>Tilbakemelding på update. Råd om kommunikasjonsstrategi: åpen informasjon kan skape forventningspress. Ber om enkle forklaringer av faglige begreper (cap table, underwriter). Uttrykker tillit til gründerduoen.</td>
         <td><span class="badge badge-amber">Innspill</span></td>
       </tr>
       <tr>
         <td>10. feb. 2026</td>
-        <td>Jacob Mørch (<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a3c9cee3d5c6d1cdc5ccd1d0cac8d1cacdc48dcdcc">[email&#160;protected]</a>)</td>
+        <td>Jacob Mørch (jm@vernforsikring.no)</td>
         <td>E-post svar</td>
         <td>«Keep it coming. Vi fortsetter å holde åpen dialog.»</td>
         <td><span class="badge badge-green">Positiv</span></td>
       </tr>
       <tr>
         <td>19. mars 2026</td>
-        <td>Jacob Mørch (<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="8fe5e2cfedfdeef9eafda1e1e0">[email&#160;protected]</a>)</td>
+        <td>Jacob Mørch (jm@braver.no)</td>
         <td>E-post</td>
         <td>Sender investeringsdokumenter (SHA + konvertibelbetingelser). Ber om org.nr for KYC. Totalt rundbeløp 5–8 mNOK (Startuplab-avklaring neste torsdag). Pre-money cap 50 mNOK. MFN-klausul bekreftet.</td>
         <td><span class="badge badge-blue">Docs sendt</span></td>
@@ -1607,10 +1088,10 @@ th.tip > span.tip-icon{vertical-align:middle}
         <div><span class="badge badge-green">✓</span> &nbsp;Gründerne kommuniserer åpent og jevnlig – uvanlig høy transparens for pre-seed</div>
         <div><span class="badge badge-green">✓</span> &nbsp;Jacob svarer raskt og konstruktivt på investorfeedback</div>
         <div><span class="badge badge-green">✓</span> &nbsp;Halvard bekreftet org.nr. og investering klart og uten forbehold</div>
-        <div><span class="badge badge-green">✓</span> &nbsp;E-postadresse endret des → feb: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c3a9a2a0aca183b6b1acaea2a8a6b1edadac">[email&#160;protected]</a> → <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="771d1a3701120519111805041e1c051e1910591918">[email&#160;protected]</a> – professjonalisering</div>
+        <div><span class="badge badge-green">✓</span> &nbsp;E-postadresse endret des → feb: jacob@uromaker.no → jm@vernforsikring.no – professjonalisering</div>
         <div><span class="badge badge-amber">△</span> &nbsp;Ca. 3 uker fra «signeringsklare docs ila en uke» (23. mars) til faktisk signaturforespørsel (14. april)</div>
         <div><span class="badge badge-amber">△</span> &nbsp;Halvards råd om kommunikasjonskompleksitet er relevant – cap table, WISE-begrep etc. er ukjent for mange investorer</div>
-        <div><span class="badge badge-red">✗</span> &nbsp;Gjeldsbrev med Affectum AS og Base Bedrift AS sine navn og beløp er ikke dokumentert mottatt</div>
+        <div><span class="badge badge-amber">△</span> &nbsp;Gjeldsbrev med navn og beløp ikke dokumentert mottatt — Affectum FAA signert, Base Bedrift avventer</div>
         <div><span class="badge badge-red">✗</span> &nbsp;Startuplab-avklaringen (forventet «neste torsdag» etter 19. mars) – status ukjent</div>
       </div>
     </div>
@@ -1623,17 +1104,521 @@ th.tip > span.tip-icon{vertical-align:middle}
         <div>Han vil trolig reagere negativt på overraskelser. Åpen og proaktiv kommunikasjon fra gründerne fremover er essensielt for å opprettholde tilliten.</div>
       </div>
     </div>
-  </div>
+  </div></div>
 </div>
 
-<!-- IRR / MOIC -->
-<div id="irr" class="page">
+<div id="marked" class="page">
   <div class="page-header">
-    <div class="page-title">IRR / MOIC</div>
-    <div class="page-desc">Avkastningsanalyse for seed-investorene ved ulike exit-verdier og tidspunkter. Beregnet på post-konvertering eierandel ved NOK 200/aksje.</div>
+    <div class="page-title">Marked</div>
+    <div class="page-desc">Norsk skadeforsikring, nordiske markeder og etablerte aktører.</div>
+  </div>
+  <div class="ptab-bar">
+    <button class="ptab on" onclick="ptab('marke','no',this)">Norge</button>
+    <button class="ptab" onclick="ptab('marke','nord',this)">Norden</button>
+    <button class="ptab" onclick="ptab('marke','inc',this)">Incumbents</button>
+  </div>
+  <div id="marke-no" class="ptab-pane on"><div class="g4">
+    <div class="card"><div class="card-title">Landbasert skadeforsikring Q4 2024</div><div class="card-big" style="color:var(--blue)">94,7 mrd</div><div class="card-sub">NOK bestandspremie · Finans Norge</div></div>
+    <div class="card"><div class="card-title">Vekst siden 2019</div><div class="card-big" style="color:var(--green)">+70,6%</div><div class="card-sub">Fra 55,5 mrd (2019) til 94,7 mrd NOK</div></div>
+    <div class="card"><div class="card-title">Verns adresserbare TAM</div><div class="card-big" style="color:var(--blue)">71,5 mrd</div><div class="card-sub">NOK · motor + bolig privatmarked 2024</div></div>
+    <div class="card"><div class="card-title">Premievekst 2024</div><div class="card-big" style="color:var(--green)">+11,6%</div><div class="card-sub">Fra Q4 2023 · sterkeste på ti år</div></div>
   </div>
 
   <div class="g2">
+    <div class="card">
+      <div class="card-title">P&amp;C-vekst 2019–2025 <span style="font-size:15px;color:var(--ink-5);font-weight:400">Finans Norge bestandspremie landbasert (mrd NOK)</span></div>
+      <div style="height:200px"><canvas id="c-novekst"></canvas></div>
+      <div style="font-size:15px;color:var(--ink-5);margin-top:6px;padding-top:6px;border-top:.5px solid var(--paper-2)">Veksten er strukturell: prisøkninger, økt forsikringssum og EV-relatert reprising – ikke konjunktur. Motorvogn fikk +20,5% i 2025 (Finans Norge).</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Premievolum per produktgruppe – Q4 2024 <span style="font-size:15px;color:var(--ink-5);font-weight:400">Finans Norge bestandspremie (mill NOK)</span></div>
+      <div style="display:flex;gap:14px;margin-bottom:8px;font-size:15px;color:var(--ink-4)">
+        <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:2px;background:var(--blue)"></div>Verns adresserbare marked</div>
+        <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:2px;background:var(--ink-5)"></div>Øvrige bransjer</div>
+      </div>
+      <div style="height:200px"><canvas id="c-ssb-norge"></canvas></div>
+      <div style="font-size:15px;color:var(--ink-5);margin-top:6px;padding-top:6px;border-top:.5px solid var(--paper-2)">Motor + bolig = 35 600 + 18 100 = 53 700 mNOK av privatmarkedet (TAM inkl. næring: 71,5 mrd NOK).</div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Markedsandeler – skadeforsikring Norge Q4 2024 <span style="font-size:15px;color:var(--ink-5);font-weight:400">Finans Norge</span></div>
+      <div style="margin-bottom:8px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px"><div style="font-size:15px;color:var(--ink-2);font-weight:500;width:185px">Gjensidige</div><div style="flex:1;height:6px;background:var(--paper-2);border-radius:3px;overflow:hidden"><div style="width:100%;height:100%;background:var(--blue);border-radius:3px"></div></div><div style="font-size:15px;color:var(--ink-4);width:62px;text-align:right;font-weight:500">26,3%</div></div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px"><div style="font-size:15px;color:var(--ink-2);width:185px">If Skadeforsikring</div><div style="flex:1;height:6px;background:var(--paper-2);border-radius:3px;overflow:hidden"><div style="width:74%;height:100%;background:var(--blue);border-radius:3px"></div></div><div style="font-size:15px;color:var(--ink-4);width:62px;text-align:right">~19–20%</div></div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px"><div style="font-size:15px;color:var(--ink-2);width:185px">Fremtind (inkl. Eika)</div><div style="flex:1;height:6px;background:var(--paper-2);border-radius:3px;overflow:hidden"><div style="width:70%;height:100%;background:var(--blue);border-radius:3px"></div></div><div style="font-size:15px;color:var(--ink-4);width:62px;text-align:right">~18–19%</div></div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px"><div style="font-size:15px;color:var(--ink-2);width:185px">Tryg (inkl. Codan)</div><div style="flex:1;height:6px;background:var(--paper-2);border-radius:3px;overflow:hidden"><div style="width:49%;height:100%;background:var(--blue);border-radius:3px"></div></div><div style="font-size:15px;color:var(--ink-4);width:62px;text-align:right">~13%</div></div>
+        <div style="height:.5px;background:var(--paper-3);margin:6px 0"></div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px"><div style="font-size:15px;color:var(--ink-4);width:185px">Storebrand</div><div style="flex:1;height:6px;background:var(--paper-2);border-radius:3px;overflow:hidden"><div style="width:20%;height:100%;background:var(--paper-4);border-radius:3px"></div></div><div style="font-size:15px;color:var(--ink-5);width:62px;text-align:right">5,2%</div></div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px"><div style="font-size:15px;color:var(--ink-4);width:185px">Frende</div><div style="flex:1;height:6px;background:var(--paper-2);border-radius:3px;overflow:hidden"><div style="width:14%;height:100%;background:var(--paper-4);border-radius:3px"></div></div><div style="font-size:15px;color:var(--ink-5);width:62px;text-align:right">3,7%</div></div>
+        <div style="display:flex;align-items:center;gap:8px"><div style="font-size:15px;color:var(--ink-4);width:185px">Øvrige (15+ selskaper)</div><div style="flex:1;height:6px;background:var(--paper-2);border-radius:3px;overflow:hidden"><div style="width:61%;height:100%;background:var(--paper-3);border-radius:3px"></div></div><div style="font-size:15px;color:var(--ink-5);width:62px;text-align:right">~16%</div></div>
+      </div>
+      <div style="font-size:15px;color:var(--ink-5);margin-top:4px">Top-4 samlet ~78,9% · ned fra 80,1% Q3 2023 · Eika fusjonerte inn i Fremtind 1. okt. 2024</div>
+    </div>
+    <div class="card">
+      <div class="card-title">De fire store – nøkkeldata</div>
+      <table>
+        <tr><th>Selskap</th><th>Andel</th><th>Eierskap</th><th>Komb.ratio</th></tr>
+        <tr style="background:var(--blue-ll)"><td style="font-weight:500;color:var(--blue)">Gjensidige</td><td style="font-weight:500;color:var(--blue)">26,3%</td><td>Norsk · børsnotert OSE</td><td><strong style="color:var(--green)">70,4%</strong> (2021 privat)</td></tr>
+        <tr><td style="font-weight:500">If</td><td>~19–20%</td><td>Finsk · heleid Sampo Group</td><td><strong>78,0%</strong> (2021)</td></tr>
+        <tr><td style="font-weight:500">Fremtind</td><td>~18–19%</td><td>SpareBank 1 + DNB + Eika</td><td>Ikke offentliggjort</td></tr>
+        <tr><td style="font-weight:500">Tryg</td><td>~13%</td><td>Dansk · børsnotert · inkl. Codan</td><td><strong>84,2%</strong> (2021 privat)</td></tr>
+      </table>
+      <div class="note" style="margin-top:8px">Privatsegmentet er langt mer lønnsomt enn samlede tall viser. Gjensidiges private komb.ratio 70,4% er ekstraordinært lavt – nettopp dette segmentet Vern sikter mot.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Konsolidering 2022–2024 – strukturelle endringer</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+      <div style="background:var(--paper);border-radius:var(--r);padding:10px 12px">
+        <div style="font-size:15px;font-weight:500;color:var(--ink-4);margin-bottom:4px">Apr. 2022</div>
+        <div style="font-size:15px;font-weight:500;color:var(--ink);margin-bottom:3px">Tryg kjøper Codan Norge</div>
+        <div style="font-size:15px;color:var(--ink-3);line-height:1.6">Tryg øker fra ~9% til ~13%. Codan/RSA finnes ikke lenger som selvstendig aktør.</div>
+      </div>
+      <div style="background:var(--paper);border-radius:var(--r);padding:10px 12px">
+        <div style="font-size:15px;font-weight:500;color:var(--ink-4);margin-bottom:4px">Jul. 2022</div>
+        <div style="font-size:15px;font-weight:500;color:var(--ink);margin-bottom:3px">Storebrand overtar Danica</div>
+        <div style="font-size:15px;color:var(--ink-3);line-height:1.6">Storebrand øker fra ~4% til ~5%. Danica-merket forsvinner fra norsk skadeforsikring.</div>
+      </div>
+      <div style="background:var(--paper);border-radius:var(--r);padding:10px 12px">
+        <div style="font-size:15px;font-weight:500;color:var(--ink-4);margin-bottom:4px">Apr. 2024</div>
+        <div style="font-size:15px;font-weight:500;color:var(--ink);margin-bottom:3px">ERGO overtar helseforsikring</div>
+        <div style="font-size:15px;color:var(--ink-3);line-height:1.6">Storebrand selger behandlingsforsikring til ERGO Group (Storebrand ~5,2% ekskl. helse).</div>
+      </div>
+      <div style="background:var(--blue-ll);border-radius:var(--r);padding:10px 12px">
+        <div style="font-size:15px;font-weight:500;color:var(--blue);margin-bottom:4px">Okt. 2024</div>
+        <div style="font-size:15px;font-weight:500;color:var(--blue);margin-bottom:3px">Eika fusjonerer inn i Fremtind</div>
+        <div style="font-size:15px;color:var(--ink-3);line-height:1.6">Fremtind øker fra ~14–15% til ~18–19%. Eika (4%) eksisterer ikke lenger selvstendig.</div>
+      </div>
+    </div>
+    <div class="warn" style="margin-top:8px;margin-bottom:0">Top-4 har gått fra 80,1% → 78,9% siste år – marginal reduksjon, men konsentrasjonen er ekstraordinært høy. Nye fullverdige carriers forventes ikke å etablere seg, noe som gjør MGA-modellen til det reelle alternativet for nyetablerere.</div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Strukturelle muligheter</div>
+      <div style="font-size:15px;color:var(--ink-3);line-height:2">
+        <div><span class="badge badge-green">Mulighet</span> &nbsp;Ingen digital retail P&amp;C-utfordrer – unik posisjon i Norden</div>
+        <div><span class="badge badge-green">Mulighet</span> &nbsp;BankID-penetrasjon &gt;90% – infrastruktur klar for D2C</div>
+        <div><span class="badge badge-green">Mulighet</span> &nbsp;25% kundebyttefrekvens – ~720 000 bytter bilforsikring hvert år</div>
+        <div><span class="badge badge-green">Mulighet</span> &nbsp;EV-andel &gt;25% nyregistreringer – nye risikoprofiler reprises nå</div>
+        <div><span class="badge badge-green">Mulighet</span> &nbsp;Incumbents hever motor-rater +20,5% (2025) – kunder søker alternativer</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Barrierer og kritiske gap</div>
+      <div style="font-size:15px;color:var(--ink-3);line-height:2">
+        <div><span class="badge badge-amber">Barriere</span> &nbsp;Naturskadepool obligatorisk – lik kostnad alle carriers</div>
+        <div><span class="badge badge-amber">Barriere</span> &nbsp;Boligforsikring: kun ~1–2% byttefrekvens – primært kryssalg</div>
+        <div><span class="badge badge-amber">Barriere</span> &nbsp;LO-innboforsikring blokkerer ~40% av innbomarkedet</div>
+        <div><span class="badge badge-red">Kritisk gap</span> &nbsp;Carrier-avtale ikke signert per mars 2026</div>
+        <div><span class="badge badge-red">Kritisk gap</span> &nbsp;Norsk datapipeline for polisehenting uavklart</div>
+      </div>
+    </div>
+  </div></div>
+<div id="marke-nord" class="ptab-pane"><div class="g4">
+    <div class="card"><div class="card-title">Norge – bruttopremie</div><div class="card-big">EUR ~7 mrd</div><div class="card-sub">~NOK 81 000 pr. innb. (høyest)</div></div>
+    <div class="card"><div class="card-title">Sverige – bruttopremie</div><div class="card-big">EUR ~9 mrd</div><div class="card-sub">~NOK 54 000 pr. innb.</div></div>
+    <div class="card"><div class="card-title">Danmark – bruttopremie</div><div class="card-big">EUR ~8 mrd</div><div class="card-sub">~NOK 82 000 pr. innb.</div></div>
+    <div class="card"><div class="card-title">Finland – bruttopremie</div><div class="card-big">EUR ~4 mrd</div><div class="card-sub">~NOK 43 000 pr. innb. (lavest)</div></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Combined ratio – nordisk skadeforsikring vs. Europa/UK (2012–2024)</div>
+    <div style="height:240px"><canvas id="c-cr-nordic"></canvas></div>
+    <div style="font-size:15px;color:var(--ink-5);margin-top:6px">Nordisk combined ratio jevnt under 90% – klart bedre enn europeisk gjennomsnitt. Høy lønnsomhet for etablerte aktører.</div>
+  </div>
+  <div class="g2w">
+    <div class="card">
+      <div class="card-title">Strukturelle forklaringer – premie pr. innbygger</div>
+      <div style="font-size:15px;color:var(--ink-3);line-height:1.9">
+        <div style="margin-bottom:6px"><strong>Norge og Danmark høyere enn Sverige/Finland:</strong></div>
+        <div style="margin-bottom:4px">• <strong>Eiendomsverdier:</strong> Høyere boligpriser gir høyere boligforsikringspremier</div>
+        <div style="margin-bottom:4px">• <strong>Bilavgifter:</strong> Norske nybilavgifter gir høyere kasko-premier</div>
+        <div style="margin-bottom:4px">• <strong>Velferdsstatsubstitusjon (Finland):</strong> OP Gruppens bankforsikring integrerer helsedekninger i kollektive ordninger</div>
+        <div style="margin-bottom:4px">• <strong>Byggekostnader:</strong> Norge har Europas høyeste byggekostnader</div>
+        <div>• <strong>Dekningsnormer:</strong> Norske kunder har høyere forventning til dekningsbredde</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Sanity-sjekk: sammenligner vi epler og pærer?</div>
+      <table>
+        <tr><th>Faktor</th><th>Effekt</th></tr>
+        <tr><td>Totalt marked inkl. liv</td><td>Overvurderer forskjell</td></tr>
+        <tr><td>Kollektive/yrkesskade-andel varierer</td><td>Påvirker per capita</td></tr>
+        <tr><td>Valutakurs (EUR/NOK)</td><td>Forsterker NOK-tall</td></tr>
+        <tr><td>OP Bank (Finland) bundler forsikring</td><td>Underrapporterer premie</td></tr>
+        <tr><td>Norsk bilpark: høy elbil-andel</td><td>Høyere kasko pr. kjøretøy</td></tr>
+      </table>
+      <div style="font-size:15px;color:var(--ink-5);margin-top:8px">Konklusjon: Retningene stemmer, men absolutte tall bør tolkes med varsomhet.</div>
+    </div>
+  </div></div>
+<div id="marke-inc" class="ptab-pane"><div class="card">
+    <div class="card-title">Combined ratio – nordiske konserner (2023–2024)</div>
+    <div style="height:260px"><canvas id="c-inc"></canvas></div>
+    <div style="font-size:15px;color:var(--ink-5);margin-top:6px">Combined ratio under 100% = teknisk overskudd. Nordiske aktører er konsistent lønnsomme.</div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Gjensidige</div>
+      <table>
+        <tr><th>Nøkkeltall</th><th>2023</th></tr>
+        <tr><td>Bruttopremie</td><td>NOK 36,7 mrd</td></tr>
+        <tr><td>Combined ratio (privat)</td><td>~87%</td></tr>
+        <tr><td>Markedsandel Norge</td><td>~29%</td></tr>
+        <tr><td>Kundelojalitet</td><td>Svært høy (gjensidighet)</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title">Fremtind</div>
+      <table>
+        <tr><th>Nøkkeltall</th><th>2023</th></tr>
+        <tr><td>Bruttopremie</td><td>NOK ~18 mrd</td></tr>
+        <tr><td>Combined ratio</td><td>~88%</td></tr>
+        <tr><td>Distribusjonskanal</td><td>SpareBank 1, DNB, Eika-banker</td></tr>
+        <tr><td>Sårbarhet</td><td>Bankavhengig distribusjon</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title">If Skadeforsikring</div>
+      <table>
+        <tr><th>Nøkkeltall</th><th>2023</th></tr>
+        <tr><td>Nordisk markedsandel</td><td>~19%</td></tr>
+        <tr><td>Combined ratio (privat)</td><td>~78%</td></tr>
+        <tr><td>Eier</td><td>Sampo (Finland)</td></tr>
+        <tr><td>Styrke</td><td>Lavest combined ratio i Norden</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title">Tryg</div>
+      <table>
+        <tr><th>Nøkkeltall</th><th>2023</th></tr>
+        <tr><td>Bruttopremie (NO+DK+SE)</td><td>DKK ~32 mrd</td></tr>
+        <tr><td>Combined ratio</td><td>~82–84%</td></tr>
+        <tr><td>Eier</td><td>Børsnotert (DK)</td></tr>
+        <tr><td>Norsk tilstedeværelse</td><td>Inkl. Codan Norge</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="note"><strong>Implikasjon for Vern:</strong> De store er ikke teknisk ineffektive – combined ratio er lav. Muligheten er distribusjonskostnad og prisfleksibilitet via MGA-modellen. En digital-first distribusjonskanal med lavere kundeanskaffelseskostnad er den reelle differensieringsmuligheten.</div></div>
+</div>
+
+<div id="produkter" class="page">
+  <div class="page-header">
+    <div class="page-title">Produkter</div>
+    <div class="page-desc">Bilforsikring og boligforsikring.</div>
+  </div>
+  <div class="ptab-bar">
+    <button class="ptab on" onclick="ptab('produ','bil',this)">Bilforsikring</button>
+    <button class="ptab" onclick="ptab('produ','bolig',this)">Boligforsikring</button>
+  </div>
+  <div id="produ-bil" class="ptab-pane on"><div class="g4">
+    <div class="card"><div class="card-title">Forsikrede personbiler (Q3 2024)</div><div class="card-big" style="color:var(--blue)">2 877 321</div><div class="card-sub">Finans Norge · lovpålagt trafikkansvar</div></div>
+    <div class="card"><div class="card-title">Motor bestandspremie Q4 2024</div><div class="card-big" style="color:var(--blue)">35,5 mrd</div><div class="card-sub">NOK · trafikk + kasko · Finans Norge</div></div>
+    <div class="card"><div class="card-title">Snittpremie per kjøretøy 2024</div><div class="card-big">~11 500 NOK</div><div class="card-sub">SSB 11580 ÷ FN-antall · trafikk+kasko</div></div>
+    <div class="card"><div class="card-title">Byttefrekvens 2024</div><div class="card-big" style="color:var(--green)">25%</div><div class="card-sub">~720 000 bytter bilforsikring per år</div></div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Premieutvikling motor 2012–2024 <span style="font-size:15px;color:var(--ink-5);font-weight:400">SSB 11580 (mill. NOK)</span></div>
+      <div style="display:flex;gap:14px;margin-bottom:8px;font-size:15px;color:var(--ink-4)">
+        <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:2px;background:#c4440f"></div>Kasko (øvrig motor)</div>
+        <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:2px;background:var(--blue)"></div>Trafikk</div>
+      </div>
+      <div style="height:200px"><canvas id="c-bil-premie"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Erstatning motor 2012–2024 <span style="font-size:15px;color:var(--ink-5);font-weight:400">SSB 11580 (mill. NOK)</span></div>
+      <div style="display:flex;gap:14px;margin-bottom:8px;font-size:15px;color:var(--ink-4)">
+        <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:2px;background:#c4440f"></div>Kasko</div>
+        <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:2px;background:var(--blue)"></div>Trafikk</div>
+      </div>
+      <div style="height:200px"><canvas id="c-bil-erst"></canvas></div>
+      <div style="font-size:15px;color:var(--ink-5);margin-top:6px">Kasko-erstatning doblet seg fra 7,7 mrd (2012) til 19,5 mrd (2024). Rekordår 2023: 18,7 mrd.</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Loss ratio motor 2012–2024 – kasko vs. trafikk <span style="font-size:15px;color:var(--ink-5);font-weight:400">SSB 11580 · erstatning ÷ premie</span></div>
+    <div style="display:flex;gap:14px;margin-bottom:8px;font-size:15px;color:var(--ink-4)">
+      <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:2px;background:#c4440f"></div>Kasko</div>
+      <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:2px;background:var(--blue)"></div>Trafikk</div>
+    </div>
+    <div style="height:180px"><canvas id="c-bil-lr"></canvas></div>
+    <div class="danger" style="margin-top:8px;margin-bottom:0">Kasko 2023: 87,1% (18,7 mrd ÷ 21,5 mrd) – kritisk høyt for ny MGA. 2024: 79,0% (19,5 mrd ÷ 24,7 mrd) – bedring, men ustabilt. EV-skader og dyrt reservedelsmarked presser trenden.</div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Nøkkeltall bilskader 2024 <span style="font-size:15px;color:var(--ink-5);font-weight:400">Finans Norge årsstatistikk</span></div>
+      <div style="font-size:15px;color:var(--ink-3)">
+        <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:.5px solid var(--paper-2)"><span>Totalt antall bilskader</span><strong style="color:var(--red)">1 144 000 – rekord</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:.5px solid var(--paper-2)"><span>Motorvognerstatninger totalt</span><strong>24,4 mrd NOK (+9,3%)</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:.5px solid var(--paper-2)"><span>Gjennomsnittlig skadeutbetaling</span><strong>21 300 kr (opp fra 20 000)</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:.5px solid var(--paper-2)"><span>Bilbranner 2024</span><strong>Rekord · +36% fra 2023</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:.5px solid var(--paper-2)"><span>Premieøkning motorvogn 2025</span><strong>+20,5% (Finans Norge)</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:5px 0"><span>EV-andel nye biler</span><strong>&gt;25% · batteribrann ny risikoklasse</strong></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Bottom-up – Verns adresserbare bilmarked</div>
+      <div style="font-size:15px;color:var(--ink-3)">
+        <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:.5px solid var(--paper-2)"><span>Forsikrede personbiler</span><strong>~2 877 000</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:.5px solid var(--paper-2)"><span>Byttefrekvens p.a.</span><strong style="color:var(--green)">25% = ~720 000 bytter/år</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:.5px solid var(--paper-2)"><span>Snittpremie (trafikk+kasko)</span><strong>~11 500 NOK/år</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:.5px solid var(--paper-2)"><span>— herav trafikk</span><strong>~3 850 NOK/år</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:.5px solid var(--paper-2)"><span>— herav kasko</span><strong>~7 960 NOK/år</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:.5px solid var(--paper-2)"><span>Verns venteliste (bil+bolig)</span><strong>32 400 NOK/år (+26% over snitt)</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:5px 0"><span>Break-even kunder</span><strong>6 000 = 0,83% av byttepool</strong></div>
+      </div>
+      <div class="good" style="margin-top:10px;margin-bottom:0">Bil er Verns enkleste inngangsprodukt: lovpålagt forsikring, 25% byttefrekvens, stor byttepool (720k/år). Break-even krever 0,83% av de som uansett bytter.</div>
+    </div>
+  </div></div>
+<div id="produ-bolig" class="ptab-pane"><div class="g4">
+    <div class="card"><div class="card-title">Selveiere 2024 (primærmarked)</div><div class="card-big" style="color:var(--blue)">1 621 866</div><div class="card-sub">Bygning + innbo · SSB 11081</div></div>
+    <div class="card"><div class="card-title">FN hjem/villa/hytte Q4 2024</div><div class="card-big" style="color:var(--blue)">18,1 mrd</div><div class="card-sub">NOK bestandspremie · +14% fra 2023</div></div>
+    <div class="card"><div class="card-title">Snittpremie selveier (bygning+innbo)</div><div class="card-big">~11 100 NOK</div><div class="card-sub">FN 18,1 mrd ÷ 1 622k selveiere</div></div>
+    <div class="card"><div class="card-title">Byttefrekvens bolig</div><div class="card-big" style="color:var(--amber)">~1–2%</div><div class="card-sub">~16–32k bytter per år · mye lavere enn bil</div></div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Premie brann/eiendom 2012–2024 <span style="font-size:15px;color:var(--ink-5);font-weight:400">SSB 11580 (mill. NOK)</span></div>
+      <div style="height:200px"><canvas id="c-bolig-premie"></canvas></div>
+      <div style="font-size:15px;color:var(--ink-5);margin-top:6px">SSB bransje 07 inkluderer næring. Privat hjem/villa/hytte (Finans Norge) = ~51% av bransje 07 i 2024.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Erstatning brann/eiendom 2012–2024 <span style="font-size:15px;color:var(--ink-5);font-weight:400">SSB 11580 (mill. NOK)</span></div>
+      <div style="height:200px"><canvas id="c-bolig-erst"></canvas></div>
+      <div style="font-size:15px;color:var(--ink-5);margin-top:6px">Rekordår 2023: 26,5 mrd erstatning. 2024: 27,9 mrd. Vannskader +50% og brannskader +30% siste 5 år.</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Loss ratio brann/eiendom 2012–2024 <span style="font-size:15px;color:var(--ink-5);font-weight:400">SSB 11580 · erstatning ÷ premie</span></div>
+    <div style="height:160px"><canvas id="c-bolig-lr"></canvas></div>
+    <div class="warn" style="margin-top:8px;margin-bottom:0">Bolig loss ratio er mer stabil enn kasko: historisk range 56–84%. 2023 rekordår (83,5%) pga. augustflommene. 2024: 78,0% – normalisering. Gunstigere enn kasko for MGA-forhandling med carrier.</div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Markedssegmentering <span style="font-size:15px;color:var(--ink-5);font-weight:400">SSB 11081 · 2024</span></div>
+      <div style="margin-bottom:10px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px"><div style="font-size:15px;color:var(--blue);font-weight:500;width:200px">Selveiere – bygning+innbo</div><div style="flex:1;height:6px;background:var(--paper-2);border-radius:3px;overflow:hidden"><div style="width:100%;height:100%;background:var(--blue);border-radius:3px"></div></div><div style="font-size:15px;color:var(--blue);width:70px;text-align:right;font-weight:500">1 621 866</div></div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px"><div style="font-size:15px;color:var(--amber);width:200px">Andelseiere – kun innbo</div><div style="flex:1;height:6px;background:var(--paper-2);border-radius:3px;overflow:hidden"><div style="width:22%;height:100%;background:var(--amber-l);border-radius:3px"></div></div><div style="font-size:15px;color:var(--amber);width:70px;text-align:right">352 806</div></div>
+        <div style="display:flex;align-items:center;gap:8px"><div style="font-size:15px;color:var(--ink-4);width:200px">Leiere – kun innbo</div><div style="flex:1;height:6px;background:var(--paper-2);border-radius:3px;overflow:hidden"><div style="width:38%;height:100%;background:var(--paper-3);border-radius:3px"></div></div><div style="font-size:15px;color:var(--ink-5);width:70px;text-align:right">609 855</div></div>
+      </div>
+      <div style="font-size:15px;color:var(--ink-3)">
+        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:.5px solid var(--paper-2)"><span>LO-innboforsikring</span><strong style="color:var(--amber)">~40% av innbomarkedet blokkert</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0"><span>Naturskadepool</span><strong>Obligatorisk – lik kostnad alle carriers</strong></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Bottom-up – Verns adresserbare boligmarked</div>
+      <div style="font-size:15px;color:var(--ink-3)">
+        <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:.5px solid var(--paper-2)"><span>Selveiere (bygning+innbo)</span><strong>1 621 866</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:.5px solid var(--paper-2)"><span>Byttefrekvens p.a.</span><strong>~1–2% = 16–32k bytter/år</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:.5px solid var(--paper-2)"><span>Snittpremie selveier</span><strong>~11 100 NOK/år</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:.5px solid var(--paper-2)"><span>Break-even boligkunder (isolert)</span><strong style="color:var(--red)">6 000 = 19–38% av årets bytter</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:5px 0"><span>Strategisk posisjonering</span><strong>Kryssalg til bilkunder</strong></div>
+      </div>
+      <div class="warn" style="margin-top:10px;margin-bottom:0">Bolig som kryssalgsprodukt til bilkunder er riktig strategi: felles onboarding via BankID, én kundekontakt, høyere ARPU. Kombinert bil+bolig = ~22 600 NOK/år vs. Verns venteliste 32 400 NOK/år.</div>
+    </div>
+  </div></div>
+</div>
+
+<div id="captable" class="page">
+  <div class="page-header">
+    <div class="page-title">Cap table &amp; avkastning</div>
+    <div class="page-desc">Eierstruktur, IRR/MOIC og runway.</div>
+  </div>
+  <div class="ptab-bar">
+    <button class="ptab on" onclick="ptab('capta','ct',this)">Cap table</button>
+    <button class="ptab" onclick="ptab('capta','irr',this)">IRR / MOIC</button>
+    <button class="ptab" onclick="ptab('capta','run',this)">Runway</button>
+  </div>
+  <div id="capta-ct" class="ptab-pane on"><div class="card">
+    <div class="card-title">Forutsetninger</div>
+    <div class="g2" style="margin-bottom:10px">
+      <div>
+        <div style="font-size:11px;color:var(--blue);margin-bottom:2px;font-weight:600;text-transform:uppercase;letter-spacing:.06em">Affectum AS</div>
+        <div style="font-size:10px;color:var(--ink-5);margin-bottom:6px">987 827 637</div>
+        <table style="font-size:14px">
+          <tr><td style="color:var(--ink-4);border:none;padding:3px 6px 3px 0">Lånebeløp</td><td style="border:none;padding:3px 0"><strong>1,5 mNOK</strong></td></tr>
+          <tr><td style="color:var(--ink-4);border:none;padding:3px 6px 3px 0">Andel av runden</td><td style="border:none;padding:3px 0">~22,2%</td></tr>
+        </table>
+      </div>
+      <div>
+        <div style="font-size:11px;color:var(--amber);margin-bottom:2px;font-weight:600;text-transform:uppercase;letter-spacing:.06em">Base Bedrift AS</div>
+        <div style="font-size:10px;color:var(--ink-5);margin-bottom:6px">998 625 084</div>
+        <table style="font-size:14px">
+          <tr><td style="color:var(--ink-4);border:none;padding:3px 6px 3px 0">Lånebeløp</td><td style="border:none;padding:3px 0"><strong>0,5 mNOK</strong></td></tr>
+          <tr><td style="color:var(--ink-4);border:none;padding:3px 6px 3px 0">Andel av runden</td><td style="border:none;padding:3px 0">~5,6%</td></tr>
+        </table>
+      </div>
+    </div>
+    <div style="border-top:.5px solid var(--paper-3);padding-top:10px">
+      <div style="font-size:11px;color:var(--ink-4);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.06em">Felles vilkår</div>
+      <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px;font-size:13px">
+        <div><div style="color:var(--ink-4);margin-bottom:2px" class="tip">Konv.kurs<span class="tip-icon" data-tip="Kursen lånet konverteres til aksjer ved. Minimum NOK 50, maksimum NOK 500 per aksje. Faktisk kurs fastsettes ved neste finansieringsrunde.">?</span></div><strong>NOK 50–500</strong></div>
+        <div><div style="color:var(--ink-4);margin-bottom:2px" class="tip">Rabatt neste runde<span class="tip-icon" data-tip="Investorene tegner aksjer til 20% lavere kurs enn øvrige investorer i neste finansieringsrunde. Aktiveres kun dersom konverteringskursen ellers ville vært høyere enn rabattert kurs.">?</span></div><strong>20%</strong></div>
+        <div><div style="color:var(--ink-4);margin-bottom:2px" class="tip">Verdivurd.tak<span class="tip-icon" data-tip="Valuation cap under forhandling. Juster slideren i Post-money-seksjonen nedenfor.">?</span></div><strong data-cap-display>50 mNOK</strong></div>
+        <div><div style="color:var(--ink-4);margin-bottom:2px" class="tip">Rente<span class="tip-icon" data-tip="Lånet er rentefritt. Merk: Skattemyndighetene kan beregne en sjablongmessig renteinntekt for norske långivere etter armlengdeprinsippet (sktl. §13-1).">?</span></div><strong>0%</strong></div>
+        <div><div style="color:var(--ink-4);margin-bottom:2px" class="tip">Løpetid<span class="tip-icon" data-tip="Seneste dato for konvertering. Dersom konvertering ikke har skjedd innen 2031, konverteres lånet automatisk til NOK 500 per aksje (maksimalkursen).">?</span></div><strong>t.o.m. 2031</strong></div>
+        <div><div style="color:var(--ink-4);margin-bottom:2px" class="tip">Opsjonspott<span class="tip-icon" data-tip="SHA §6 tillater et insentivprogram på inntil 10% av aksjene (post-dilution). Utvanningseffekten av opsjonspotten er ikke inkludert i disse beregningene.">?</span></div><strong>Maks 10%</strong></div>
+      </div>
+    </div>
+    <div style="border-top:.5px solid var(--paper-3);padding-top:10px;margin-top:10px">
+      <div style="font-size:11px;color:var(--ink-4);margin-bottom:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em">Post-money verdivurdering</div>
+      <div style="display:flex;gap:24px;align-items:flex-end;flex-wrap:wrap;margin-bottom:12px">
+        <div>
+          <label style="font-size:13px;color:var(--ink-4);display:block;margin-bottom:4px" class="tip">Pre-money (verdivurd.tak)<span class="tip-icon" data-tip="Valuation cap under forhandling. Endring her oppdaterer cap table, post-money, scenariomatrise og IRR/MOIC. NOK 50 mNOK er nåværende forhandlingsposisjon.">?</span></label>
+          <div style="display:flex;align-items:center;gap:8px">
+            <input type="range" id="cap-slider" min="10" max="100" step="5" value="50"
+              style="width:160px;accent-color:var(--blue)" oninput="oppdaterPostMoney()">
+            <span style="font-size:14px;font-weight:600;color:var(--blue)"><span id="cap-verdi">50</span> mNOK</span>
+          </div>
+        </div>
+        <div>
+          <label style="font-size:13px;color:var(--ink-4);display:block;margin-bottom:4px">Ny kapital inn (seed):</label>
+          <div style="display:flex;align-items:center;gap:8px">
+            <input type="range" id="seed-slider" min="2" max="9" step="0.25" value="9"
+              style="width:160px;accent-color:var(--blue)" oninput="oppdaterPostMoney()">
+            <span style="font-size:14px;font-weight:600;color:var(--blue)"><span id="seed-verdi">9</span> mNOK</span>
+          </div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;font-size:13px">
+        <div><div style="color:var(--ink-4);margin-bottom:2px" class="tip">Pre-money (tak)<span class="tip-icon" data-tip="Valuation cap: maksimal verdivurdering som legges til grunn ved konvertering. Under forhandling — juster slideren for å simulere ulike utfall.">?</span></div><strong id="pm-cap-verdi" style="color:var(--blue)">50 mNOK</strong></div>
+        <div><div style="color:var(--ink-4);margin-bottom:2px" class="tip">Ny kapital inn<span class="tip-icon" data-tip="Kapital som skytes inn i seed-runden. Juster slideren for å se effekten på post-money verdivurdering og øvrige investorers andel.">?</span></div><strong id="pm-kapital-inn" style="color:var(--blue)">9 mNOK</strong></div>
+        <div><div style="color:var(--ink-4);margin-bottom:2px" class="tip">Post-money (full runde)<span class="tip-icon" data-tip="Pre-money (tak) + total kapital inn fra hele seed-runden.">?</span></div><strong id="pm-full" style="color:var(--blue)">59 mNOK</strong></div>
+        <div><div style="color:var(--ink-4);margin-bottom:2px" class="tip">Post-money (de to)<span class="tip-icon" data-tip="Pre-money (tak) + kapitalen fra de to navngitte investorene (2,0 mNOK). Brukes som grunnlag for post-money verdi i cap table.">?</span></div><strong id="pm-tre-inv" style="color:var(--blue)">52,0 mNOK</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Konverteringsscenario – Affectum AS · Base Bedrift AS</div>
+    <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:16px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <label style="font-size:15px;color:var(--ink-4)">Konverteringskurs:</label>
+        <input type="range" id="kurs-slider" min="50" max="500" step="10" value="200"
+          style="width:180px;accent-color:var(--blue)" oninput="oppdaterCaptable()">
+        <span style="font-size:15px;font-weight:600;color:var(--blue);min-width:36px">NOK <span id="kurs-verdi">200</span></span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <input type="checkbox" id="rabatt-check" style="accent-color:var(--blue)" onchange="oppdaterCaptable()" checked>
+        <label style="font-size:15px;color:var(--ink-4)">Bruk 20% rabatt (neste runde)</label>
+      </div>
+    </div>
+    <div id="captable-results"></div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Eierstruktur post-konvertering (Affectum + Base + gründere)</div>
+      <div style="height:240px"><canvas id="c-captable-pie"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Eierandel per investor – alle konverteringskurser</div>
+      <div style="height:240px"><canvas id="c-captable-line"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Scenariomatrise – alle tre investorer ved konverteringskurs NOK 50 til NOK 500</div>
+    <div style="overflow-x:auto">
+    <table id="scenario-tabell">
+      <tr>
+        <th>Kurs (NOK)</th>
+        <th class="tip">Eff. kurs m/rabatt<span class="tip-icon" data-tip="Effektiv konverteringskurs etter 20% rabatt. Aktiveres ved konvertering i neste finansieringsrunde.">?</span></th>
+        <th style="color:var(--blue)" class="tip">Affectum aksjer<span class="tip-icon" data-tip="Nye aksjer Affectum AS (1,5 mNOK) mottar. Beregnet som lånebeløp ÷ kurs.">?</span></th>
+        <th style="color:var(--blue)" class="tip">Affectum andel<span class="tip-icon" data-tip="Affectums isolerte andel mot gründerne (uten øvrige investorer). Post full konvertering er andelen lavere.">?</span></th>
+
+        <th style="color:var(--amber)" class="tip">Base aksjer<span class="tip-icon" data-tip="Nye aksjer Base Bedrift AS (0,5 mNOK) mottar.">?</span></th>
+        <th style="color:var(--amber)" class="tip">Base andel<span class="tip-icon" data-tip="Base Bedrift AS sin isolerte andel mot gründerne.">?</span></th>
+        <th class="tip">Impl. verdi ⓘ<span class="tip-icon" data-tip="Implisitt selskapverdi basert på Affectums andel. Ved kurs over NOK 400 overstiger denne 50 mNOK – konverteringen skjer likevel til maks NOK 500.">?</span></th>
+      </tr>
+    </table>
+    </div>
+    <div style="font-size:12px;color:var(--ink-5);margin-top:8px;padding-top:6px;border-top:.5px solid var(--paper-2)">Andeler er isolert mot gründerne (100 000 grunnlagsaksjer). Post full seed-konvertering er alle andeler lavere – se cap table nedenfor.</div>
+  </div>
+
+  <div class="warn"><strong>Viktig:</strong> Scenarioboksene og matrisen viser isolert andel mot gründerne. Den faktiske andelen etter at alle tre investorer konverterer er lavere — se cap table nedenfor for reelle andeler.</div>
+
+  <div class="card">
+    <div class="card-title">Cap table – hele seed-runden konverterer (NOK 200/aksje, ingen rabatt)</div>
+    <table>
+      <tr>
+        <th>Aksjonær</th>
+        <th>Aksjer pre-seed</th>
+        <th class="tip">Nye aksjer (konv.)<span class="tip-icon" data-tip="Antall nye aksjer investor mottar ved konvertering. Beregnet som lånebeløp ÷ konverteringskurs (NOK 200, ingen rabatt).">?</span></th>
+        <th>Totalt</th>
+        <th class="tip">Andel %<span class="tip-icon" data-tip="Eierandel etter at hele seed-runden (se slider) er konvertert. Inkluderer alle investorer og øvrige seed-deltakere.">?</span></th>
+        <th class="tip">Post-money verdi<span class="tip-icon" data-tip="Aksjonærens andel × post-money verdivurdering (50 mNOK pre-money + 2,0 mNOK fra de to investorene = 52,0 mNOK). Ikke realisert verdi – kun implisitt ved taket.">?</span></th>
+      </tr>
+      <tr><td>Christer Dalsbøe</td><td>50 000</td><td>–</td><td>50 000</td><td id="cd-andel">–</td><td id="cd-pm">–</td></tr>
+      <tr><td>Jacob Mørch</td><td>50 000</td><td>–</td><td>50 000</td><td id="jm-andel">–</td><td id="jm-pm">–</td></tr>
+      <tr><td>Affectum AS</td><td>–</td><td id="affectum-aksjer">–</td><td id="affectum-tot">–</td><td id="affectum-andel">–</td><td id="affectum-pm">–</td></tr>
+
+      <tr><td>Base Bedrift AS</td><td>–</td><td id="base-aksjer">–</td><td id="base-tot">–</td><td id="base-andel">–</td><td id="base-pm">–</td></tr>
+      <tr><td>Øvrige investorer (seed)</td><td>–</td><td id="ovrige-aksjer">–</td><td id="ovrige-tot">–</td><td id="ovrige-andel">–</td><td id="ovrige-pm">–</td></tr>
+      <tr style="font-weight:600;background:var(--paper-2)"><td>Totalt</td><td>100 000</td><td id="nye-tot">–</td><td id="grand-tot">–</td><td>100%</td><td id="total-pm" style="color:var(--blue)">–</td></tr>
+    </table>
+    <div style="font-size:13px;color:var(--ink-5);margin-top:8px">* Grunnlagsaksjer: 100 000 (estimert). Post-money verdi beregnet på pre-money tak (50 mNOK) + innbetalt kapital fra de to investorene (2,0 mNOK) = 52,0 mNOK.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Serie A – utvanningsmodell</div>
+    <div style="display:flex;gap:24px;align-items:flex-end;flex-wrap:wrap;margin-bottom:16px">
+      <div>
+        <div style="font-size:12px;color:var(--ink-4);margin-bottom:5px" class="tip">Serie A pre-money verdsettelse<span class="tip-icon" data-tip="Verdsettelse av selskapet FØR Serie A-kapital skytes inn. Jo høyere pre-money, jo lavere utvanning for eksisterende aksjonærer. Drag-along-terskel i SHA er NOK 75 mNOK.">?</span></div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <input type="range" id="serieA-pre" min="50" max="300" step="5" value="100"
+            style="width:180px;accent-color:var(--blue)" oninput="oppdaterSerieA()">
+          <span style="font-size:14px;font-weight:600;color:var(--blue)"><span id="serieA-pre-verdi">100</span> mNOK</span>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:12px;color:var(--ink-4);margin-bottom:5px" class="tip">Ny kapital inn (Serie A)<span class="tip-icon" data-tip="Kapital som skytes inn i Serie A-runden. Øker post-money verdivurdering og antall nye aksjer, noe som utvanner alle eksisterende aksjonærer.">?</span></div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <input type="range" id="serieA-kapital" min="10" max="100" step="5" value="30"
+            style="width:180px;accent-color:var(--blue)" oninput="oppdaterSerieA()">
+          <span style="font-size:14px;font-weight:600;color:var(--blue)"><span id="serieA-kapital-verdi">30</span> mNOK</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="g4" style="margin-bottom:14px">
+      <div style="background:var(--blue-ll);border:.5px solid var(--blue-l);border-radius:var(--r);padding:12px">
+        <div style="font-size:11px;color:var(--blue);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Post-money Serie A</div>
+        <div style="font-size:22px;font-weight:600;color:var(--blue)" id="serieA-postmoney">130 mNOK</div>
+        <div style="font-size:11px;color:var(--ink-4)">pre-money + ny kapital</div>
+      </div>
+      <div style="background:var(--paper);border:.5px solid var(--paper-3);border-radius:var(--r);padding:12px">
+        <div style="font-size:11px;color:var(--ink-4);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Serie A-investorers andel</div>
+        <div style="font-size:22px;font-weight:600;color:var(--ink)" id="serieA-investorandel">23,1%</div>
+        <div style="font-size:11px;color:var(--ink-4)">ny kapital ÷ post-money</div>
+      </div>
+      <div style="background:var(--amber-ll);border:.5px solid var(--amber-l);border-radius:var(--r);padding:12px">
+        <div style="font-size:11px;color:var(--amber);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Konverteringskurs seed</div>
+        <div style="font-size:22px;font-weight:600;color:var(--amber)" id="serieA-konvkurs">–</div>
+        <div style="font-size:11px;color:var(--ink-4)">cap/rabatt-justert</div>
+      </div>
+      <div style="background:var(--green-ll);border:.5px solid var(--green-l);border-radius:var(--r);padding:12px">
+        <div style="font-size:11px;color:var(--green);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Verdi per seed-aksje</div>
+        <div style="font-size:22px;font-weight:600;color:var(--green)" id="serieA-aksjeverd">–</div>
+        <div style="font-size:11px;color:var(--ink-4)">ved Serie A-kurs</div>
+      </div>
+    </div>
+
+    <table id="serieA-tabell">
+      <tr>
+        <th>Aksjonær</th>
+        <th class="tip">Andel etter seed %<span class="tip-icon" data-tip="Eierandel etter at hele seed-runden er konvertert (ved NOK 200/aksje, ingen rabatt). Utgangspunkt for Serie A-beregningen.">?</span></th>
+        <th class="tip">Andel etter Serie A %<span class="tip-icon" data-tip="Eierandel etter at Serie A-investorer har tegnet nye aksjer. Alle eksisterende aksjonærer utvanner proporsjonalt.">?</span></th>
+        <th class="tip">Verdi ved Serie A post-money<span class="tip-icon" data-tip="Aksjonærens andel × Serie A post-money verdivurdering. Indikerer implisitt markedsverdi – ikke realisert verdi.">?</span></th>
+      </tr>
+    </table>
+    <div style="font-size:12px;color:var(--ink-5);margin-top:8px;padding-top:6px;border-top:.5px solid var(--paper-2)">Seed-investorer konverterer til effektiv kurs = min(cap-kurs, Serie A-kurs × 0,80). Cap-kurs = 50 mNOK pre-money ÷ 100 000 grunnlagsaksjer. Opsjonspott (10%) ikke inkludert.</div>
+  </div></div>
+<div id="capta-irr" class="ptab-pane"><div class="g2">
     <div>
       <div style="font-size:12px;color:var(--ink-4);margin-bottom:5px" class="tip">Exit-verdi (enterprise value)<span class="tip-icon" data-tip="Totalverdien av selskapet ved exit. Drag-along i SHA utløses ved NOK 75 mNOK. Nordiske insurtech-exits: Prima.it EUR 1,2 mrd, Policy Expert ikke børsnotert.">?</span></div>
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
@@ -1741,7 +1726,7 @@ th.tip > span.tip-icon{vertical-align:middle}
   </div>
 
   <div class="card">
-    <div class="card-title">Sannsynlighetsvektet forventet verdi – Affectum AS og Base Bedrift AS</div>
+    <div class="card-title">Sannsynlighetsvektet forventet verdi – alle tre investorer</div>
     <div style="font-size:12px;color:var(--ink-4);margin-bottom:12px">Juster sannsynlighetene (sum må være 100%). Proveny beregnes fra eierandeler og exit-verdier i scenariotabellen over.</div>
 
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px">
@@ -1815,17 +1800,8 @@ th.tip > span.tip-icon{vertical-align:middle}
 
   <div class="danger">
     <strong>Skatt ved konvertering:</strong> For norske aksjeselskaper som långivere er konvertering av fordringen til aksjer skattepliktig realisasjon (Rt. 2011-1620). Gevinsten beregnes ved konvertering og skattes med 22% selskapsskatt – uten kontantoppgjør. Dette reduserer netto IRR vesentlig for begge investorer. Eksempel: ved MOIC 5× og 5 år er brutto IRR ~38%, men netto IRR etter konverteringsskatt kan være 10–20 prosentpoeng lavere avhengig av inngangsverdi.
-  </div>
-</div>
-
-<!-- RUNWAY -->
-<div id="runway" class="page">
-  <div class="page-header">
-    <div class="page-title">Runway</div>
-    <div class="page-desc">Kontantforbruk og kapitalhorisont frem til Serie A. Burn rate er et estimat — faktisk forbruk er et åpent due diligence-gap som må avklares med gründerne.</div>
-  </div>
-
-  <div class="danger" style="margin-bottom:14px">
+  </div></div>
+<div id="capta-run" class="ptab-pane"><div class="danger" style="margin-bottom:14px">
     <strong>Estimater — ikke verifiserte tall:</strong> E-poster oppgir at committed kapital dekker 6–12 måneder (des. 2025-epost). Totalrunden er 5–8 mNOK avhengig av Startuplab. Justér slideren for begge scenarioer. Faktisk burn rate er ikke oppgitt. Tallene nedenfor er basert på (1) SSB/Tekna lønnsnivå for 2–3 FTE i Norge/Sverige 2026 (NOK 80–120k/mnd per hode inkl. avg.), (2) generell kunnskap om tech-compliance og MGA-oppsettskostnader. <strong>Be gründerne om detaljert budsjett og faktisk forbruk hittil før signering.</strong>
   </div>
 
@@ -1885,10 +1861,9 @@ th.tip > span.tip-icon{vertical-align:middle}
 
   <div class="note">
     <strong>Spørsmål til gründerne (due diligence):</strong> (1) Hva er faktisk månedlig kontantforbruk i dag? (2) Hva er budsjettert burn rate for 2026 og 2027? (3) Hvilke faste forpliktelser er allerede inngått (leie, lisenser, ansettelseskontrakter)? (4) Når forventes første MGA-inntekt, og hva er antatt break-even-dato?
-  </div>
+  </div></div>
 </div>
 
-<!-- SENSITIVITET MGA -->
 <div id="sensitivitet" class="page">
   <div class="page-header">
     <div class="page-title">Sensitivitet MGA</div>
@@ -2067,10 +2042,261 @@ th.tip > span.tip-icon{vertical-align:middle}
   </div>
 </div>
 
-</div><!-- /main -->
-</div><!-- /app -->
+<div id="inv-oversikt" class="page">
+  <div class="page-header">
+    <div class="page-title">Rundeoversikt</div>
+    <div class="page-desc">Kapitalrunde i Mambus AB per 14. april 2026. Instrument: konvertible lån (WISE). Ingen rente, ingen avdrag. Affectum AS og Base Bedrift AS investerer på likelydende vilkår.</div>
+  </div>
+  <div class="g4">
+    <div class="card"><div class="card-title">Ramme (vilkår)</div><div class="card-big">9 mNOK</div><div class="card-sub">Maks totalt</div></div>
+    <div class="card"><div class="card-title">Målbeløp</div><div class="card-big">8,5 mNOK</div><div class="card-sub">Inkl. Startuplab 3 mNOK</div></div>
+    <div class="card"><div class="card-title">Pre-money cap</div><div class="card-big">50 mNOK</div><div class="card-sub">Valuation cap</div></div>
+    <div class="card"><div class="card-title">Slutt-dag</div><div class="card-big">2031</div><div class="card-sub">Automatisk konvertering</div></div>
+  </div>
+  <div class="g2">
+    <div style="background:#fff;border:.5px solid var(--blue-l);border-radius:var(--r-lg);padding:18px 20px">
+      <div style="font-size:11px;color:var(--blue);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Affectum AS</div>
+      <div style="font-size:11px;color:var(--ink-5);margin-bottom:8px">org.nr. 987 827 637 · Halvard Nordang · Bodø</div>
+      <div class="card-big" style="color:var(--blue)">1,5 mNOK</div>
+      <div style="font-size:13px;color:var(--ink-4);margin-bottom:10px">75% av de to investorene</div>
+      <table style="font-size:13px">
+        <tr><td style="border:none;padding:3px 8px 3px 0;color:var(--ink-4)">Post-conv. andel (est.)</td><td style="border:none;padding:3px 0"><strong>~6,5%</strong></td></tr>
+        <tr><td style="border:none;padding:3px 8px 3px 0;color:var(--ink-4)">FAA signert</td><td style="border:none;padding:3px 0"><span class="badge badge-green">14. april 2026</span></td></tr>
+        <tr><td style="border:none;padding:3px 8px 3px 0;color:var(--ink-4)">Nærstående (sktl.)</td><td style="border:none;padding:3px 0"><span class="badge badge-amber">Ja — §§ 6-2 / 13-1</span></td></tr>
+      </table>
+    </div>
+    <div style="background:#fff;border:.5px solid var(--amber-l);border-radius:var(--r-lg);padding:18px 20px">
+      <div style="font-size:11px;color:var(--amber);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Base Bedrift AS</div>
+      <div style="font-size:11px;color:var(--ink-5);margin-bottom:8px">org.nr. 998 625 084 · Brynjar Storvik · Bodø</div>
+      <div class="card-big" style="color:var(--amber)">0,5 mNOK</div>
+      <div style="font-size:13px;color:var(--ink-4);margin-bottom:10px">25% av de to investorene</div>
+      <table style="font-size:13px">
+        <tr><td style="border:none;padding:3px 8px 3px 0;color:var(--ink-4)">Post-conv. andel (est.)</td><td style="border:none;padding:3px 0"><strong>~2,2%</strong></td></tr>
+        <tr><td style="border:none;padding:3px 8px 3px 0;color:var(--ink-4)">FAA signert</td><td style="border:none;padding:3px 0"><span class="badge badge-amber">Avventes</span></td></tr>
+        <tr><td style="border:none;padding:3px 8px 3px 0;color:var(--ink-4)">Nærstående (sktl.)</td><td style="border:none;padding:3px 0"><span class="badge badge-green">Nei</span></td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Alle kjente investorer</div>
+    <table>
+      <tr><th>Investor</th><th>Beløp</th><th>Instrument</th><th>Status</th></tr>
+      <tr><td>Startuplab</td><td><strong>3 000 000 NOK</strong></td><td>Konvertibelt lån</td><td><span class="badge badge-green">Bekreftet</span></td></tr>
+      <tr><td>Affectum AS</td><td><strong>1 500 000 NOK</strong></td><td>Konvertibelt lån</td><td><span class="badge badge-green">FAA signert 14.04.26</span></td></tr>
+      <tr><td>Base Bedrift AS</td><td><strong>500 000 NOK</strong></td><td>Konvertibelt lån</td><td><span class="badge badge-amber">FAA avventes</span></td></tr>
+      <tr><td>Global Investments AS</td><td>750 000 NOK</td><td>Aksjekjøp fra Christer</td><td><span class="badge badge-amber">Mulig</span></td></tr>
+      <tr><td>Øvrige</td><td>Rest opp til 8,5 mNOK</td><td>Konvertible lån</td><td><span class="badge badge-amber">Avventes</span></td></tr>
+    </table>
+    <div style="background:var(--paper-2);border-radius:4px;height:5px;margin-top:14px;overflow:hidden"><div style="height:100%;width:35%;background:var(--green);border-radius:4px"></div></div>
+    <div style="font-size:12px;color:var(--ink-4);margin-top:6px">35% av målbeløpet bekreftet · 65% under avklaring</div>
+  </div>
+</div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<div id="inv-juridisk" class="page">
+  <div class="page-header">
+    <div class="page-title">SHA &amp; investorrettigheter</div>
+    <div class="page-desc">Aksjonæravtale, konvertibelvilkår og rettigheter.</div>
+  </div>
+  <div class="ptab-bar">
+    <button class="ptab on" onclick="ptab('invju','sha',this)">SHA &amp; konvertibel</button>
+    <button class="ptab" onclick="ptab('invju','ret',this)">Rettigheter</button>
+  </div>
+  <div id="invju-sha" class="ptab-pane on"><nav style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px">
+    <a onclick="document.getElementById('jur-konv').scrollIntoView({behavior:'smooth'})" style="font-size:12px;padding:4px 12px;border:.5px solid var(--paper-3);border-radius:20px;cursor:pointer;color:var(--ink-3);background:#fff">Konvertibelvilkår</a>
+    <a onclick="document.getElementById('jur-lockup').scrollIntoView({behavior:'smooth'})" style="font-size:12px;padding:4px 12px;border:.5px solid var(--paper-3);border-radius:20px;cursor:pointer;color:var(--ink-3);background:#fff">Lock-up &amp; overdragelse</a>
+    <a onclick="document.getElementById('jur-tagdrag').scrollIntoView({behavior:'smooth'})" style="font-size:12px;padding:4px 12px;border:.5px solid var(--paper-3);border-radius:20px;cursor:pointer;color:var(--ink-3);background:#fff">Tag / Drag-along</a>
+    <a onclick="document.getElementById('jur-innlosning').scrollIntoView({behavior:'smooth'})" style="font-size:12px;padding:4px 12px;border:.5px solid var(--paper-3);border-radius:20px;cursor:pointer;color:var(--ink-3);background:#fff">Innløsning</a>
+    <a onclick="document.getElementById('jur-diverse').scrollIntoView({behavior:'smooth'})" style="font-size:12px;padding:4px 12px;border:.5px solid var(--paper-3);border-radius:20px;cursor:pointer;color:var(--ink-3);background:#fff">Konfidensialitet &amp; mer</a>
+  </nav>
+  <div class="good">SHA og konvertibelvilkår er juridisk ryddige og markedsstandard for nordisk pre-seed.</div>
+  <div id="jur-konv" class="card">
+    <div class="card-title">Konvertibelvilkår (WISE)</div>
+    <table><tr><th>Vilkår</th><th>Detalj</th></tr>
+      <tr><td>Instrument</td><td>Konvertibelt lån · ingen rente · ingen avdrag</td></tr>
+      <tr><td>Løpetid</td><td>Til 2031 · automatisk konvertering på slutt-dag</td></tr>
+      <tr><td>Konverteringskurs</td><td>Min 50 NOK · maks 500 NOK per aksje</td></tr>
+      <tr><td>Trigger</td><td>Priset emisjonsrunde ELLER 2031 (tvungen)</td></tr>
+      <tr><td>Cap-MFN</td><td>Automatisk nedjustering ved lavere cap i ny konvertibel</td></tr>
+      <tr><td>Exit-opsjon</td><td>Salg/kontrollskifte: kontant ELLER konvertering — investors valg</td></tr>
+      <tr><td>Prioritet konkurs</td><td>Etter ordinære kreditorer · pari passu øvrige konvertibler</td></tr>
+      <tr><td>SHA ved konvertering</td><td>Investor tiltrer aksjonæravtale automatisk</td></tr>
+    </table>
+  </div>
+  <div id="jur-lockup" class="card" style="margin-top:8px">
+    <div class="card-title">Lock-up &amp; overdragelse (§§ 9–10)</div>
+    <table><tr><th>Bestemmelse</th><th>Detalj</th></tr>
+      <tr><td>Lock-up</td><td>5 år fra SHA-dato · overdragelse krever 1/3 av stemmene</td></tr>
+      <tr><td>Etter lock-up</td><td>30 dagers varsel til grundere</td></tr>
+      <tr><td>Founder fri-salg</td><td>25% av beholdning fritt uten §§ 10–12</td></tr>
+      <tr><td>Heleid selskap</td><td>Alltid tillatt · joint and several liability</td></tr>
+      <tr><td>Forkjøpsrett</td><td>30 dagers frist · pro rata · loddtrekning for rest</td></tr>
+      <tr><td>Hembud (vedtekter § 13)</td><td>2 måneder fra behørig varsel · pris = kjøpesum</td></tr>
+    </table>
+  </div>
+  <div id="jur-tagdrag" class="card" style="margin-top:8px">
+    <div class="card-title">Tag-along, drag-along &amp; dead-lock</div>
+    <table><tr><th>Mekanisme</th><th>Detalj</th></tr>
+      <tr><td>Tag-along (§ 11)</td><td>Rett til å selge aksjer på like vilkår ved avslag forkjøpsrett</td></tr>
+      <tr><td>Drag-along (§ 12)</td><td>Plikt til salg ved tilbud på alle aksjer</td></tr>
+      <tr><td>Drag-along terskel</td><td>75 mNOK minimumspris · akseptert av grundere eller 80% av stemmer</td></tr>
+      <tr><td>Likebehandling</td><td>Pris og vilkår identiske for alle parter</td></tr>
+      <tr><td>Dead-lock (§ 13)</td><td>Mekling SCC · ingen tvangsinnløsning ved uløst dead-lock</td></tr>
+    </table>
+  </div>
+  <div id="jur-innlosning" class="card" style="margin-top:8px">
+    <div class="card-title">Innløsning — brudd &amp; særtilfeller (§§ 14–15)</div>
+    <table><tr><th>Situasjon</th><th>Pris</th><th>Frist</th></tr>
+      <tr><td>Kontraktsbrudd · kjøpe ut</td><td>25% av verdi</td><td>30 dagers utbedring</td></tr>
+      <tr><td>Bot per brudd</td><td>250 000 NOK</td><td>Fordeles mellom øvrige</td></tr>
+      <tr><td>Konkurs / insolvens</td><td>100% av verdi</td><td>90 dager</td></tr>
+      <tr><td>Død</td><td>100% av verdi</td><td>90 dager · arving tiltrer SHA</td></tr>
+      <tr><td>Bodelning / skilsmisse</td><td>Særeie sikres</td><td>Ektepakt anbefalt</td></tr>
+    </table>
+  </div>
+  <div id="jur-diverse" class="card" style="margin-top:8px">
+    <div class="card-title">Verdsettelse, konfidensialitet &amp; mer</div>
+    <table><tr><th>Bestemmelse</th><th>Detalj</th></tr>
+      <tr><td>Verdsettelse (§ 16)</td><td>Siste runde (maks 1 år) · ellers uavhengig takstmann · SCC oppnevner · 60 dager</td></tr>
+      <tr><td>SHA-endringer (§ 25)</td><td>Alle parter ELLER 80% av aksjer · skriftlig</td></tr>
+      <tr><td>Insentivprogram</td><td>Maks 10% av aksjer · styret utsteder opsjoner</td></tr>
+      <tr><td>Avtalevarighet</td><td>20 år · forlenges 2 år automatisk</td></tr>
+      <tr><td>Ikke-konkurranse (§ 20)</td><td>Mens aksjer eies + 2 år etter · gjelder personlig via FAA</td></tr>
+      <tr><td>Konfidensialitet (§ 21)</td><td>Mens aksjer eies + 5 år etter · gjelder personlig via FAA</td></tr>
+      <tr><td>Voldgift (§ 29)</td><td>SCC · Stockholm · engelsk · fullt konfidensielt</td></tr>
+    </table>
+  </div></div>
+<div id="invju-ret" class="ptab-pane"><div class="card">
+    <div class="card-title">Finansielle rettigheter</div>
+    <table><tr><th>Rettighet</th><th>§</th><th>Beskrivelse</th></tr>
+      <tr><td>Anti-dilution</td><td>§ 7</td><td>Proporsjonell deltakelse i alle rettede emisjoner på samme vilkår</td></tr>
+      <tr><td>Cap-MFN</td><td>Konvertibelvilkår</td><td>Auto-nedjustering av kurs hvis ny konvertibel har lavere cap</td></tr>
+      <tr><td>Exit-opsjon</td><td>Konvertibelvilkår</td><td>Salg/kontrollskifte: velg kontant eller konvertering</td></tr>
+      <tr><td>Tag-along</td><td>§ 11</td><td>Rett til å selge på like vilkår som Offering Party</td></tr>
+      <tr><td>Drag-along beskyttelse</td><td>§ 12</td><td>Likebehandling garantert · minimumsterskel 75 mNOK</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <div class="card-title">Styrings- og informasjonsrettigheter</div>
+    <table><tr><th>Rettighet</th><th>§</th><th>Beskrivelse</th></tr>
+      <tr><td>Styrerepresentasjon</td><td>§ 5</td><td>Investorer utpeker styremedlemmer samlet (minoritet)</td></tr>
+      <tr><td>Vetorett SHA-endringer</td><td>§ 25</td><td>Krever alle parter ELLER 80% av aksjer</td></tr>
+      <tr><td>Informasjonsplikt selskapet</td><td>§ 16</td><td>Plikter å gi takstmann all forespurt informasjon</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <div class="card-title">Innløsningsrettigheter</div>
+    <table><tr><th>Situasjon</th><th>§</th><th>Pris</th><th>Frist</th></tr>
+      <tr><td>Forkjøpsrett ved salg</td><td>§ 10</td><td>Tilbudt pris</td><td>30 dager</td></tr>
+      <tr><td>Kjøpe ut ved kontraktsbrudd</td><td>§ 14</td><td>25% av verdi</td><td>Etter 30 dagers utbedring</td></tr>
+      <tr><td>Konkurs / insolvens</td><td>§ 15.1.i</td><td>100% av verdi</td><td>90 dager</td></tr>
+      <tr><td>Død</td><td>§ 15.1.ii</td><td>100% av verdi</td><td>90 dager</td></tr>
+    </table>
+  </div>
+  <div class="warn"><strong>Personlig eksponering via FAA:</strong> Halvard Nordang og Brynjar Storvik garanterer personlig (enkel borgen) for alle SHA-forpliktelser. Ikke-konkurranse og konfidensialitet gjelder personlig, ikke kun via selskapet.</div></div>
+</div>
+
+<div id="inv-partnere" class="page">
+  <div class="page-header">
+    <div class="page-title">Affectum AS &amp; Base Bedrift AS</div>
+    <div class="page-desc">To profesjonelle investorpartnere med felles perspektiv og full informasjonsdeling. Investerer på likelydende vilkår.</div>
+  </div>
+  <div class="g2">
+    <div style="background:#fff;border:.5px solid var(--blue-l);border-radius:var(--r-lg);padding:18px 20px">
+      <div style="font-size:11px;color:var(--blue);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Affectum AS</div>
+      <table style="font-size:13px">
+        <tr><td style="border:none;padding:3px 8px 3px 0;color:var(--ink-4)">Investor</td><td style="border:none"><strong>Halvard Nordang</strong></td></tr>
+        <tr><td style="border:none;padding:3px 8px 3px 0;color:var(--ink-4)">Org.nr</td><td style="border:none">987 827 637</td></tr>
+        <tr><td style="border:none;padding:3px 8px 3px 0;color:var(--ink-4)">Adresse</td><td style="border:none">Hellmyrbruddet 20C · 8001 Bodø</td></tr>
+        <tr><td style="border:none;padding:3px 8px 3px 0;color:var(--ink-4)">E-post</td><td style="border:none">halvard@areal.affectum.no</td></tr>
+        <tr><td style="border:none;padding:3px 8px 3px 0;color:var(--ink-4)">Investert</td><td style="border:none"><strong style="color:var(--blue)">1 500 000 NOK</strong></td></tr>
+        <tr><td style="border:none;padding:3px 8px 3px 0;color:var(--ink-4)">FAA</td><td style="border:none"><span class="badge badge-green">Signert 14.04.2026</span></td></tr>
+        <tr><td style="border:none;padding:3px 8px 3px 0;color:var(--ink-4)">Nærstående</td><td style="border:none"><span class="badge badge-amber">Ja — sktl. §§ 6-2 / 13-1</span></td></tr>
+      </table>
+    </div>
+    <div style="background:#fff;border:.5px solid var(--amber-l);border-radius:var(--r-lg);padding:18px 20px">
+      <div style="font-size:11px;color:var(--amber);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Base Bedrift AS</div>
+      <table style="font-size:13px">
+        <tr><td style="border:none;padding:3px 8px 3px 0;color:var(--ink-4)">Investor</td><td style="border:none"><strong>Brynjar Storvik</strong></td></tr>
+        <tr><td style="border:none;padding:3px 8px 3px 0;color:var(--ink-4)">Org.nr</td><td style="border:none">998 625 084</td></tr>
+        <tr><td style="border:none;padding:3px 8px 3px 0;color:var(--ink-4)">Adresse</td><td style="border:none">Bodø</td></tr>
+        <tr><td style="border:none;padding:3px 8px 3px 0;color:var(--ink-4)">Investert</td><td style="border:none"><strong style="color:var(--amber)">500 000 NOK</strong></td></tr>
+        <tr><td style="border:none;padding:3px 8px 3px 0;color:var(--ink-4)">FAA</td><td style="border:none"><span class="badge badge-amber">Avventes</span></td></tr>
+        <tr><td style="border:none;padding:3px 8px 3px 0;color:var(--ink-4)">Nærstående</td><td style="border:none"><span class="badge badge-green">Nei</span></td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="note">Full informasjonsdeling og felles perspektiv. Investerer uavhengig, men koordinerer som profesjonelle partnere.</div>
+  <div class="card">
+    <div class="card-title">Felles forpliktelser via FAA</div>
+    <table><tr><th>Forpliktelse</th><th>§</th><th>Varighet</th></tr>
+      <tr><td>Stemme i samsvar med SHA</td><td>§§ 3, 5.5</td><td>Løpende</td></tr>
+      <tr><td>Ikke-konkurranse</td><td>§ 20</td><td>Mens aksjer eies + 2 år</td></tr>
+      <tr><td>Konfidensialitet</td><td>§ 21</td><td>Mens aksjer eies + 5 år</td></tr>
+      <tr><td>Særeie-klausul</td><td>§ 17</td><td>Løpende — ektepakt anbefalt</td></tr>
+      <tr><td>Personlig garanti (enkel borgen)</td><td>FAA</td><td>Løpende</td></tr>
+    </table>
+  </div>
+</div>
+
+<div id="inv-rapporter" class="page">
+  <div class="page-header">
+    <div class="page-title">Rapporter &amp; KPI</div>
+    <div class="page-desc">Historikk over mottatte oppdateringer. Periodevise rapporter legges inn etter hvert som de mottas.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Mottatte investoroppdateringer</div>
+    <div style="display:flex;flex-direction:column">
+      <div style="display:flex;gap:16px;align-items:flex-start;padding:9px 0;border-bottom:.5px solid var(--paper-2)">
+        <div style="min-width:80px;font-size:11px;font-weight:600;color:var(--ink-5);padding-top:2px">Des. 2025</div>
+        <div style="flex:1;font-size:13px;color:var(--ink-3);line-height:1.6">Vern update — markedsvalidering, Eir-dialog, 200+ leads, committed kapital 6–12 mnd</div>
+        <div><span class="badge badge-green">Mottatt</span></div>
+      </div>
+      <div style="display:flex;gap:16px;align-items:flex-start;padding:9px 0;border-bottom:.5px solid var(--paper-2)">
+        <div style="min-width:80px;font-size:11px;font-weight:600;color:var(--ink-5);padding-top:2px">Feb. 2026</div>
+        <div style="flex:1;font-size:13px;color:var(--ink-3);line-height:1.6">Statusoppdatering — jurisdiksjon Sverige, Eir-dating, kjøpsløp v1, 1 500 på venteliste</div>
+        <div><span class="badge badge-green">Mottatt</span></div>
+      </div>
+      <div style="display:flex;gap:16px;align-items:flex-start;padding:9px 0;border-bottom:.5px solid var(--paper-2)">
+        <div style="min-width:80px;font-size:11px;font-weight:600;color:var(--ink-5);padding-top:2px">Mars 2026</div>
+        <div style="flex:1;font-size:13px;color:var(--ink-3);line-height:1.6">Investeringspapirer — SHA + konvertibelterms, advisory board komplett, brandprofil v1</div>
+        <div><span class="badge badge-green">Mottatt</span></div>
+      </div>
+      <div style="display:flex;gap:16px;align-items:flex-start;padding:9px 0">
+        <div style="min-width:80px;font-size:11px;font-weight:600;color:var(--ink-5);padding-top:2px">14. apr. 2026</div>
+        <div style="flex:1;font-size:13px;color:var(--ink-3);line-height:1.6">FAA signert — Affectum AS tiltrådte SHA via Dropbox Sign</div>
+        <div><span class="badge badge-blue">Signert</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">KPI-er å følge</div>
+    <table><tr><th>KPI</th><th>Siste kjente verdi</th><th>Kilde</th></tr>
+      <tr><td>Venteliste / aktiverte kunder</td><td><strong>1 500+</strong></td><td>Mars 2026</td></tr>
+      <tr><td>CAC top-of-funnel</td><td><strong>&lt; 200 NOK</strong></td><td>Mars 2026</td></tr>
+      <tr><td>CAC-utvikling</td><td>Kuttet ~50% siden jan. 2026</td><td>Mars 2026</td></tr>
+      <tr><td>Carrier (Eir) avklart</td><td>Avklaring Q2 2026</td><td>Mars 2026</td></tr>
+      <tr><td>Forsikringskjernesystem</td><td>2 finalister</td><td>Mars 2026</td></tr>
+      <tr><td>Agentlisens Finansinspektionen</td><td>—</td><td>—</td></tr>
+      <tr><td>Premievolum (GWP)</td><td>—</td><td>—</td></tr>
+      <tr><td>Combined ratio</td><td>—</td><td>—</td></tr>
+      <tr><td>Cashburn per måned</td><td>Finansiert 6–12 mnd</td><td>Des. 2025</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <div class="card-title">Fremtidige periodevise rapporter</div>
+    <table><tr><th>Periode</th><th>Forventet</th><th>Status</th></tr>
+      <tr><td>Q1 2026</td><td>April/mai 2026</td><td><span class="badge badge-amber">Avventes</span></td></tr>
+      <tr><td>Q2 2026</td><td>Juli/august 2026</td><td><span class="badge badge-amber">Avventes</span></td></tr>
+      <tr><td>Q3 2026</td><td>Okt/nov 2026</td><td><span class="badge badge-amber">Avventes</span></td></tr>
+      <tr><td>Årsrapport 2026</td><td>Innen juni 2027</td><td><span class="badge badge-amber">Avventes</span></td></tr>
+    </table>
+  </div>
+</div>
+
+</div>
+</div>
+
+<script>
 // ── GLOBAL TOOLTIP ──
 (function() {
   var tip = document.getElementById('global-tip');
@@ -2096,29 +2322,63 @@ th.tip > span.tip-icon{vertical-align:middle}
 })();
 
 // ── NAVIGASJON ──
-function go(id, el) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item, .nav-sub').forEach(n => n.classList.remove('active'));
-  // Nullstill header-knapper
-  ['captable','irr','runway','sensitivitet'].forEach(function(k) {
-    var btn = document.getElementById('btn-'+k);
-    if (btn) { btn.style.background='#fff'; btn.style.color='var(--ink-3)'; btn.style.borderColor='var(--paper-3)'; btn.classList.remove('btn-active'); }
-  });
-  const page = document.getElementById(id);
-  if (page) page.classList.add('active');
-  // Aktiver riktig element
-  if (el && el.classList && (el.classList.contains('nav-item') || el.classList.contains('nav-sub'))) {
-    el.classList.add('active');
-  } else {
-    var btnId = 'btn-' + id;
-    var btn = document.getElementById(btnId);
-    if (btn) { btn.style.background='var(--blue)'; btn.style.color='#fff'; btn.style.borderColor='var(--blue)'; btn.classList.add('btn-active'); }
+function toggleAcc(id){document.getElementById(id).classList.toggle('open');}
+function showPersp(id,btn){
+  document.querySelectorAll('.persp-section').forEach(function(s){s.classList.remove('on');});
+  document.querySelectorAll('.persp-btn').forEach(function(b){b.classList.remove('on');});
+  document.getElementById('persp-'+id).classList.add('on'); btn.classList.add('on');
+}
+function ptab(prefix,tid,btn){
+  var bar=btn.closest('.ptab-bar');
+  if(bar){
+    bar.querySelectorAll('.ptab').forEach(function(b){b.classList.remove('on');});
+    var pg=bar.nextElementSibling;
+    while(pg){if(pg.classList&&pg.classList.contains('ptab-pane'))pg.classList.remove('on');pg=pg.nextElementSibling;}
   }
-  document.getElementById('main').scrollTop = 0;
-  if (id === 'captable')    setTimeout(initCaptable, 50);
-  if (id === 'irr')         setTimeout(function(){ oppdaterIRR(); oppdaterEV(); }, 50);
-  if (id === 'runway')      setTimeout(oppdaterRunway, 50);
-  if (id === 'sensitivitet') setTimeout(function(){ oppdaterSens(); oppdaterCAC(); }, 50);
+  btn.classList.add('on');
+  var pane=document.getElementById(prefix+'-'+tid);
+  if(pane)pane.classList.add('on');
+  setTimeout(function(){
+    window.dispatchEvent(new Event('resize'));
+    if(tid==='run' && typeof oppdaterRunway==='function') setTimeout(oppdaterRunway,80);
+    if(tid==='ct'  && typeof initCaptable  ==='function') setTimeout(initCaptable,  80);
+    if(tid==='irr'){
+      var ks=document.getElementById('kurs-slider');
+      if(ks) setTimeout(function(){ ks.dispatchEvent(new Event('input')); }, 80);
+    }
+  },50);
+}
+function go(id,el){
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.nav-item,.nav-sub').forEach(function(n){n.classList.remove('active');});
+  var pg=document.getElementById(id);
+  if(pg)pg.classList.add('active');
+  if(el&&el.classList)el.classList.add('active');
+  var titles={oversikt:'Oversikt',vern:'Vern & team',businesscase:'Business case',
+    vurdering:'Vurdering',marked:'Marked',produkter:'Produkter',
+    captable:'Cap table & avkastning',sensitivitet:'Sensitivitet MGA',
+    'inv-oversikt':'Rundeoversikt','inv-juridisk':'SHA & rettigheter',
+    'inv-partnere':'Affectum & Base Bedrift','inv-rapporter':'Rapporter & KPI'};
+  var topEl=document.getElementById('topbar-section');
+  if(topEl&&titles[id])topEl.textContent=titles[id];
+  var invPages=['captable','sensitivitet','inv-oversikt','inv-juridisk','inv-partnere','inv-rapporter'];
+  var isInv=invPages.indexOf(id)>=0;
+  document.querySelectorAll('.persp-section').forEach(function(s){s.classList.remove('on');});
+  document.querySelectorAll('.persp-btn').forEach(function(b){b.classList.remove('on');});
+  document.getElementById(isInv?'persp-inv':'persp-co').classList.add('on');
+  document.querySelectorAll('.persp-btn')[isInv?1:0].classList.add('on');
+  var main=document.getElementById('main');
+  if(main)main.scrollTop=0;
+  if(id==='captable'){
+    setTimeout(function(){
+      initCaptable();
+      oppdaterRunway();
+      // IRR kurs-slider trigger
+      var ks=document.getElementById('kurs-slider');
+      if(ks) ks.dispatchEvent(new Event('input'));
+    }, 80);
+  }
+  if(id==='sensitivitet') setTimeout(oppdaterSens, 80);
 }
 
 // ── CAP TABLE ──
@@ -2931,7 +3191,6 @@ function oppdaterCAC() {
 
 
 document.addEventListener('DOMContentLoaded', function() {
-  setTimeout(function(){ initCaptable(); oppdaterIRR(); oppdaterEV(); oppdaterRunway(); }, 300);
   var aar = ['2012','2013','2014','2015','2016','2017','2018','2019','2020','2021','2022','2023','2024'];
   var premKasko = [10793,11158,11730,11745,11781,12032,13235,14360,15444,16985,19369,21516,24671];
   var premTrafikk = [7531,7839,7991,8267,7726,7622,8054,8568,9102,9626,9385,9857,11090];
@@ -3072,4 +3331,29 @@ document.addEventListener('DOMContentLoaded', function() {
   // Boligforsikring – erstatning
   chart('c-bolig-erst', { type:'line',
     data: { labels: aar,
-      datasets: [{ label:'Erstatn
+      datasets: [{ label:'Erstatning brann/eiendom', data:erstBrann, borderColor:'#c4440f', backgroundColor:'rgba(196,68,15,.07)', tension:.3, pointRadius:3, fill:true }] },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false} },
+      scales:{ x:{ grid:{display:false}, ticks:{font:{size:9},maxRotation:45} },
+        y:{ ticks:{ callback:function(v){ return (v/1000).toFixed(0)+' mrd'; }, font:{size:10} } } } }
+  });
+
+  // Boligforsikring – loss ratio
+  var lrBo = aar.map(function(_,i){ return Math.round(erstBrann[i]/premBrann[i]*100); });
+  chart('c-bolig-lr', { type:'line',
+    data: { labels: aar,
+      datasets: [{ label:'Loss ratio brann/eiendom', data:lrBo, borderColor:'#185FA5', borderWidth:2.5, tension:.3, pointRadius:4, fill:false }] },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false} },
+      scales:{ x:{ grid:{display:false}, ticks:{font:{size:9},maxRotation:45} },
+        y:{ min:40, max:100, ticks:{ callback:function(v){ return v+'%'; }, font:{size:10} } } } }
+  });
+
+  // Init interaktive sider med default-verdier
+  setTimeout(function() {
+    if (typeof oppdaterSens   === 'function') oppdaterSens();
+    if (typeof oppdaterRunway === 'function') oppdaterRunway();
+    if (typeof oppdaterCAC    === 'function') oppdaterCAC();
+  }, 200);
+});
+</script>
+</body>
+</html>
