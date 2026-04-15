@@ -73,6 +73,17 @@ th.tip > span.tip-icon{vertical-align:middle}
 .tip-icon:hover{background:var(--blue);color:#fff}
 #global-tip{display:none;position:fixed;background:var(--blue);color:#fff;font-size:11px;line-height:1.6;padding:8px 11px;border-radius:6px;width:230px;z-index:9999;font-weight:400;pointer-events:none;white-space:normal;box-shadow:0 4px 14px rgba(24,95,165,.3);text-transform:none;letter-spacing:0}
 #global-tip::before{content:'';position:absolute;bottom:100%;left:var(--arrow-left, 50%);transform:translateX(-50%);border:5px solid transparent;border-bottom-color:var(--blue)}
+
+#pw-screen{position:fixed;top:0;left:0;width:100%;height:100%;background:#f9f7f4;z-index:99999;display:flex;align-items:center;justify-content:center}
+#pw-box{background:#fff;border:.5px solid #e0dbd4;border-radius:12px;padding:2rem 2.5rem;width:340px;text-align:center}
+#pw-logo{font-family:Georgia,serif;font-size:20px;color:#1a1814;margin-bottom:4px}
+#pw-sub{font-size:12px;color:#aaa59f;margin-bottom:1.5rem}
+#pw-input{width:100%;padding:9px 12px;border:.5px solid #e0dbd4;border-radius:8px;font-size:14px;font-family:inherit;outline:none;margin-bottom:8px;box-sizing:border-box}
+#pw-input:focus{border-color:#185FA5}
+#pw-btn{width:100%;padding:9px;background:#185FA5;color:#fff;border:none;border-radius:8px;font-size:14px;font-family:inherit;cursor:pointer;font-weight:500}
+#pw-btn:hover{background:#0f4a82}
+#pw-err{font-size:12px;color:#C0392B;margin-top:6px;display:none}
+
 </style>
 <style>
 .ptab-bar{display:flex;gap:0;margin-bottom:18px;border-bottom:.5px solid var(--paper-3);flex-wrap:wrap}
@@ -92,6 +103,48 @@ th.tip > span.tip-icon{vertical-align:middle}
 </style>
 </head>
 <body>
+
+<div id="pw-screen">
+  <div id="pw-box">
+    <div id="pw-logo">Vern / Mambus AB</div>
+    <div id="pw-sub">Analyse &amp; investering · Begrenset tilgang</div>
+    <input id="pw-input" type="password" placeholder="Passord" autocomplete="current-password" onkeydown="if(event.key==='Enter')checkPw()">
+    <button id="pw-btn" onclick="checkPw()">Logg inn</button>
+    <div id="pw-err">Feil passord</div>
+  </div>
+</div>
+<script>
+(function(){
+  var HASH = '331dad66f93cbd203bbce10d78b5e348200df136757a98f9e0dfded31b788531';
+  var KEY  = 'vern_auth';
+  function show(){
+    document.getElementById('pw-screen').style.display='none';
+    document.getElementById('app-root').style.display='';
+  }
+  async function hashPw(str){
+    var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
+  }
+  if(sessionStorage.getItem(KEY)==='1'){ show(); return; }
+  document.addEventListener('DOMContentLoaded',function(){
+    document.getElementById('app-root').style.display='none';
+  });
+  window.checkPw = async function(){
+    var v = document.getElementById('pw-input').value;
+    var h = await hashPw(v);
+    if(h === HASH){
+      sessionStorage.setItem(KEY,'1');
+      show();
+    } else {
+      document.getElementById('pw-err').style.display='block';
+      document.getElementById('pw-input').value='';
+      document.getElementById('pw-input').focus();
+    }
+  };
+})();
+</script>
+
+<div id="app-root">
 <div id="global-tip"></div>
 <div class="app">
 <div class="sidebar">
@@ -2341,7 +2394,7 @@ function ptab(prefix,tid,btn){
   setTimeout(function(){
     window.dispatchEvent(new Event('resize'));
     if(tid==='run' && typeof oppdaterRunway==='function') setTimeout(oppdaterRunway,80);
-    if(tid==='ct'  && typeof initCaptable  ==='function') setTimeout(initCaptable,  80);
+    if(tid==='ct'  && typeof initCaptable  ==='function') setTimeout(function(){ initCaptable(); renderCaptableCharts(); }, 80);
     if(tid==='irr'){
       var ks=document.getElementById('kurs-slider');
       if(ks) setTimeout(function(){ ks.dispatchEvent(new Event('input')); }, 80);
@@ -2370,10 +2423,11 @@ function go(id,el){
   var main=document.getElementById('main');
   if(main)main.scrollTop=0;
   if(id==='captable'){
+    captableInit = false;
     setTimeout(function(){
       initCaptable();
+      renderCaptableCharts();
       oppdaterRunway();
-      // IRR kurs-slider trigger
       var ks=document.getElementById('kurs-slider');
       if(ks) ks.dispatchEvent(new Event('input'));
     }, 80);
@@ -2588,6 +2642,7 @@ function initCaptable() {
   captableInit = true;
   // Scenariomatrise – alle tre investorer
   var tabell = document.getElementById('scenario-tabell');
+  while (tabell && tabell.rows.length > 1) tabell.deleteRow(1); // behold header
   var laanAff = 1500000; var laanBase = 500000;
   var grunnlag = 100000;
   [50,100,150,200,250,300,350,400,450,500].forEach(function(k) {
@@ -2614,15 +2669,22 @@ function initCaptable() {
       '<td'+impFlag+'>'+(impVerd/1e6).toFixed(1)+' mNOK</td>';
     tabell.appendChild(tr);
   });
-  // Full cap table – bruk seed-slider-verdi eller default 9 mNOK
+  // Full cap table
   var seedSliderEl = document.getElementById('seed-slider');
   var seedInit = seedSliderEl ? parseFloat(seedSliderEl.value) * 1000000 : 9000000;
   oppdaterCapTableMedSeed(seedInit);
   oppdaterPostMoney();
   oppdaterSerieA();
-  // Pie chart
+  renderCaptableCharts();
+  oppdaterCaptable();
+}
+
+function renderCaptableCharts() {
+  var grunnlag = 100000;
+  // Pie — destroy og re-lag alltid
   var ctx1 = document.getElementById('c-captable-pie');
-  if (ctx1 && !captablePie) {
+  if (ctx1) {
+    if (captablePie) { captablePie.destroy(); captablePie = null; }
     captablePie = new Chart(ctx1, {
       type: 'doughnut',
       data: { labels: ['Christer Dalsbøe','Jacob Mørch','Affectum AS','Base Bedrift AS','Øvrige seed'],
@@ -2631,27 +2693,27 @@ function initCaptable() {
         plugins: { legend: { position:'bottom', labels: { font: { size:10 }, boxWidth:12 } } } }
     });
   }
-  // Line chart – alle tre investorer
+  // Line chart — destroy og re-lag alltid
   var ctx2 = document.getElementById('c-captable-line');
-  if (ctx2 && !captableLine) {
+  if (ctx2) {
+    if (captableLine) { captableLine.destroy(); captableLine = null; }
     var kurser = [50,100,150,200,250,300,350,400,450,500];
     var laanAff=1500000; var laanBase=500000;
-    var aAffUr = kurser.map(function(k){ var n=Math.floor(laanAff/k); return (n/(grunnlag+n)*100).toFixed(1); });
+    var aAffUr  = kurser.map(function(k){ var n=Math.floor(laanAff/k);  return (n/(grunnlag+n)*100).toFixed(1); });
     var aBaseUr = kurser.map(function(k){ var n=Math.floor(laanBase/k); return (n/(grunnlag+n)*100).toFixed(1); });
     captableLine = new Chart(ctx2, {
       type: 'line',
       data: { labels: kurser.map(function(k){ return 'NOK '+k; }),
         datasets: [
-          { label: 'Affectum AS', data: aAffUr, borderColor: '#C97A1A', backgroundColor: 'rgba(201,122,26,.1)', fill:true, tension:0.3 },
-          { label: 'Base Bedrift AS', data: aBaseUr, borderColor: '#c4440f', backgroundColor: 'rgba(196,68,15,.07)', fill:true, tension:0.3 }
+          { label:'Affectum AS',   data:aAffUr,  borderColor:'#C97A1A', backgroundColor:'rgba(201,122,26,.1)', fill:true, tension:0.3 },
+          { label:'Base Bedrift AS', data:aBaseUr, borderColor:'#c4440f', backgroundColor:'rgba(196,68,15,.07)', fill:true, tension:0.3 }
         ] },
       options: { responsive:true, maintainAspectRatio:false,
-        scales: { x: { ticks: { font:{size:10}, maxRotation:35 } },
-          y: { ticks: { callback: function(v){ return v+'%'; }, font:{size:10} }, min:0 } },
-        plugins: { legend: { labels: { font:{size:11}, boxWidth:12 } } } }
+        scales: { x:{ ticks:{ font:{size:10}, maxRotation:35 } },
+          y:{ ticks:{ callback:function(v){ return v+'%'; }, font:{size:10} }, min:0 } },
+        plugins: { legend:{ labels:{ font:{size:11}, boxWidth:12 } } } }
     });
   }
-  oppdaterCaptable();
 }
 
 
@@ -3355,5 +3417,6 @@ document.addEventListener('DOMContentLoaded', function() {
   }, 200);
 });
 </script>
+</div>
 </body>
 </html>
